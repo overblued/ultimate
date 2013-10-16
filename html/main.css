@@ -1,0 +1,63 @@
+/* not css besides here */
+html{text-align: center}
+
+body { 
+	color: #e6e6fa;
+/*	background-color: #292929;*/
+	background-color: #393939;
+	overflow: hidden;
+	text-align: center;
+}
+
+div {
+	position: relative;
+}
+h1{
+	margin: 0.2em 0;
+	font-size: 300%;
+	font-family: Constantia,DejaVu Sans;
+	font-variant: small-caps;
+	/*text-shadow: 0px 3px 1px #666;*/
+}
+
+/*p {
+	margin: 0px;
+	font-family: Cambria,Georgia
+}*/
+
+a {
+	/*border: 1px solid #999999;*/
+	color: #e6e6fa;
+	text-decoration: none;
+	font-family:Verdana,arial,sans-serif;
+	padding:2px;
+	/*margin-top: 2px;*/
+}
+a:hover {color:lightseagreen;}
+
+input, textarea, select {
+	background-color : #323232;
+	color: #e6e6fa;
+}
+
+header {
+	display: inline-block;
+}
+
+canvas{border:thin solid rgba(0, 0, 0, 1);}
+
+#tt {
+	color: rgba(0,0,0,0);
+	/*text-shadow: none;*/
+	-webkit-background-clip: text;
+	-moz-background-clip: text;
+	background-clip: text;
+}
+
+#canvas {
+	position: absolute;
+	z-index: -1;
+	top: 0px;
+	left: 0px;
+}
+
