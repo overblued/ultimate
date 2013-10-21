@@ -78,7 +78,29 @@
 			if (parent.appendChild){
 				parent.appendChild(this.element);
 			}
-		}
+		},
+		/* * * * * * *
+		* schedule: trying to move the setSchedule mothed to here, make it dom dependent
+		* @param {Function} callBack function
+		* @param {Number} how many times
+		* @param {Number} time in between each call, 1000ms for default
+		* * * * * * * * * * * * * * * * * * * * * * * * * * * */
+		schedule: function (callBack, times, frequency) {
+			var that = this,
+				t = 0,
+				max = times || 1,
+				f = frequency || 1000;
+			if (that.scheduleId){
+				clearTimeout(that.scheduleId);
+				that.scheduleId = 0;
+			}
+			(function handler() {
+				if (t++ < max) {
+					callBack.call(that, t);
+					that.scheduleId = setTimeout(handler, f);
+				}
+			}());
+		},
 	};
 	/* * * * * * *
 	* main acess point,i use the sign $,same as the jquery,because i have no intention to use it rather to make my own.
@@ -89,12 +111,12 @@
 
 //dom object operation
 	/* * * * * * *
-	* set multiple elements with the same css style
+	* set multiple elements with same multiple css style
 	* @param {Array} a list of the element id
 	* @param {String} css style property
 	* @param {String} attribute
 	* * * * * * * * * * * * * * * * * * * * * * * * * * * */
-	$.setStyle = function (ids){
+	$.setStyles = function (ids){
 		var cssStyles = arguments[1];
 		forEach(ids, function(id){ $(id).styles(cssStyles); });
 	};
@@ -134,28 +156,7 @@
 			}
 		}
 	};
-	/* * * * * * *
-	 * schedule an event to be called a certain times at a certain interval
-	 * @method setSchedule
-	 * @param {Function} callBack function
-	 * @param {Number} how many times
-	 * @param {Number} time in between each call, 1000ms for default
-	 * @param {Object} execution context for callback
-	 * * * * * * * * * * * * * * * * * * * * * * * * * * * */
-	setSchedule = $.setSchedule = function (callBack, times, frequency, context) {
-		var t = 0,
-			max = times || 1,
-			f = frequency || 1000,
-			id;
-		(function handler() {
-			if (t++ < max) {
-				callBack.call(context, t);
-				id = setTimeout(handler, f);
-			} else {
-				clearTimeout(id);
-			}
-		}());
-	};
+	
 	/* * * * * * *
 	* event manager
 	* $.events() to add this components
@@ -221,66 +222,7 @@
 		}
 	};
 	
-	$.mouseX = $.mouseY = $.dX = $.dY = 0;
-	var dragthis;
-	window.addEventListener("mousemove", function (evt) {
-		var b = canvas.getBoundingClientRect();
-		$.mouseX = evt.clientX - b.left;
-		$.mouseY = evt.clientY - b.top;
-		//console.log(evt);
-		if (dragthis){
-			var	i,
-				left="",
-				top="",
-				lenx = dragthis.style.left.search(/p/),
-				leny = dragthis.style.top.search(/p/);
-			for (i=0;i<lenx;i++){
-				left += dragthis.style.left[i];
-			}
-			for (i=0;i<leny;i++){
-				top += dragthis.style.top[i];
-			}
-			dragthis.style.left = +left + $.mouseX - $.dX + "px";
-			dragthis.style.top = +top + $.mouseY - $.dY + "px";
-			$.dX = $.mouseX;
-			$.dY = $.mouseY;
-
-		}
-
-	},	false);
 	
-	/* * * * * * *
-	* drag
-	*
-	*@param {Object} dom object
-	*
-	* * * * * * * * * * * * * * * * * * * * * * * * * * * */
-	drag = $.drag = function (obj, axis) {
-		var evt;
-		obj.dragble = {
-			on: false,
-			axis: axis
-		};
-
-		evt = {
-			onmousedown: function (e) {
-				e.preventDefault();
-				$.dX = $.mouseX;
-				$.dY = $.mouseY;
-				dragthis = obj;
-				//obj.dragble.on = true;
-				//obj.dragble.renew();
-
-			},
-			onmouseup: function () {
-				dragthis = null;
-				//obj.dragble.on = false;
-			}
-		};
-		extend(obj, evt);
-		
-		
-	};
 	/* * * * * * *
 	* view
 	* 

@@ -21,11 +21,11 @@
 	</nav>
 	<div id='tu' style="height: 0.1em;width:80%;margin:auto;"></div>
 	
-	<div style="background-color:#3e3e3e; width:80%;margin:auto;">
-		<div style="background-color:#404040; width:99%;height:99%;top:0.4em;left:0.4em;">
-			<div style="background-color:#424242; width:99%;height:99%;top:0.4em;left:0.4em;">
-				<div style="background-color:#444444; width:99%;height:99%;top:0.4em;left:0.4em;">
-					<div id="stage" style="background-color:#464646; min-height:450px;width:99%;top:0.4em;left:0.4em;">
+	<div style="position:relative;background-color:#3e3e3e; width:80%;margin:auto;">
+		<div style="position:relative;background-color:#404040; width:99%;height:99%;left:0.4em;">
+			<div style="position:relative;background-color:#424242; width:99%;height:99%;left:0.4em;">
+				<div style="position:relative;background-color:#444444; width:99%;height:99%;left:0.4em;">
+					<div id="stage" style="position:relative;background-color:#464646; min-height:450px;width:99%;left:0.4em;">
 						<span id="drag" style="position:relative;left:50px;top:50px;">drag me</span>
 					</div>
 				</div>

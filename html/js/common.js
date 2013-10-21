@@ -62,11 +62,11 @@ window.onload = function () { (function (theProject) {
 		mattr = "-webkit-linear-gradient(left";
 
 	for (i = 0; i <= 36; i++) {
-		mattr += ",hsla(" + i*10 + ", 50%, 80%, 1)";
+		mattr += ",hsl(" + i*10 + ", 50%, 80%)";
 	}
 	//$.get("tu").style.backgroundImage = mattr + ")";
 	//$.get("tt").style.backgroundImage = mattr + ")";
-	$.setStyle(["tt","tu2"], {backgroundImage: mattr + ")"});
+	$.setStyles(["tt","tu2"], {backgroundImage: mattr + ")"});
 
 // setSchedule test drive
 	var brightness = 27,
@@ -78,9 +78,9 @@ window.onload = function () { (function (theProject) {
 		sub3 = $("subtitle3"),
 		lightUp = function(t){ this.styles({backgroundColor: "hsl(0,0%," + (brightness + t * steps) + "%)"}); },
 		dimDown = function(t){ this.styles({backgroundColor: "hsl(0,0%," + (brightness + 10 * steps - steps * t * 2) + "%)"}); },
-		onLight = function(elem){ return function(){ $.setSchedule( lightUp, 10, 50, elem );$.setSchedule( lightUp, 10, ((Math.random()*3)>>0) * 25 + 25, elem ); };},
-		onDim = function(elem){ return function(){ $.setSchedule( dimDown, 5, 50, elem );};};
-	$.setStyle([sub1,sub2,sub3], {color: "blue", backgroundColor: hslValue});
+		onLight = function(elem){ return function(){ elem.schedule( lightUp, 10, 50); };},
+		onDim = function(elem){ return function(){ elem.schedule( dimDown, 5, 50);};};
+	$.setStyles([sub1,sub2,sub3], {color: "blue", backgroundColor: hslValue});
 	sub1.set("onmouseout", onDim(sub1) )
 		.set("onmouseover",onLight(sub1));
 	sub2.set("onmouseout", onDim(sub2))
