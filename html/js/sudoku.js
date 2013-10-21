@@ -1,13 +1,13 @@
 /* * * * * * * * * *
- * Template
+ * a simple Sudoku game
  *
- *
+ *with canvas
  *
  * * * * * * * * * * * * * * * * * * * * * * * */
-( function ($) {
+( function (theProject) {
 /*	init data ********************************************************************************************************/
 	//public
-	$.loadOrder = $.loadOrder || 1;
-	console.log(($.loadOrder)++);
+	theProject.loadOrder = theProject.loadOrder || 1;
+	console.log((theProject.loadOrder)++);
 
 }(window.ultimate = window.ultimate || {}) );

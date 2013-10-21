@@ -12,20 +12,20 @@
 <body>
 	<header>
 		<h1 id='tt'>Ultimate Project</h1>
-		
 	</header>
 	<br />
 	<nav>
-		<a href='/p/0' style="background-color:#444444;height:40px;">Pizza Shop</a>
-		<a href='/p/1' style="background-color:#404040;height:40px;">Login</a>
-		<a href='/p/0' style="background-color:#404040;height:40px;">Pizza Shop</a>
+		<a id="subtitle">1111111111111111111111</a>
+		<a id="subtitle2">2222222222222222222222</a>
+		<a id="subtitle3">3333333333333333333333</a>
 	</nav>
 	<div id='tu' style="height: 0.1em;width:80%;margin:auto;"></div>
-	<div style="background-color:#3a3a3a; width:80%;margin:auto;">
-		<div style="background-color:#3c3c3c; width:99%;left:0.5%;">
-			<div style="background-color:#3f3f3f; width:99%;left:0.5%;">
-				<div style="background-color:#414141; width:99%;left:0.5%;">
-					<div id="stage" style="background-color:#434343; min-height:450px;width:99%;left:0.5%;">
+	
+	<div style="background-color:#3e3e3e; width:80%;margin:auto;">
+		<div style="background-color:#404040; width:99%;height:99%;top:0.4em;left:0.4em;">
+			<div style="background-color:#424242; width:99%;height:99%;top:0.4em;left:0.4em;">
+				<div style="background-color:#444444; width:99%;height:99%;top:0.4em;left:0.4em;">
+					<div id="stage" style="background-color:#464646; min-height:450px;width:99%;top:0.4em;left:0.4em;">
 						<span id="drag" style="position:relative;left:50px;top:50px;">drag me</span>
 					</div>
 				</div>

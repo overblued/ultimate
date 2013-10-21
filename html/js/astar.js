@@ -1,14 +1,15 @@
 /* * * * * * * * * *
- * Template
+ *my realization of astar search with binary heap
  *
- *
+ *with canvas
  *
  * * * * * * * * * * * * * * * * * * * * * * * */
-( function ($) {
+( function (theProject) {
 /*	init data ********************************************************************************************************/
 	//public
-	$.loadOrder = $.loadOrder || 1;
-	console.log(($.loadOrder)++);
+	theProject.loadOrder = theProject.loadOrder || 1;
+	console.log((theProject.loadOrder)++);
+	
 	$.astar = function(){
 		var painter = {
 			init: function(ctx, data){
@@ -113,7 +114,7 @@
 	//	map.style.position = "absolute";
 	//	map.style.top = "10px";
 //		map.style.left = "10px";
-		$.get("stage").appendChild(map);
+		$("stage").invoke("appendChild", map);
 		painter.init(map.getContext('2d'), grid.init(painter,20,10,19));
 		grid.crumble();
 		function getX(ele){

@@ -5,70 +5,151 @@
 * @ultimate
 * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 
-(function ($) {
-	$.loadOrder = $.loadOrder || 1;
-	console.log(($.loadOrder)++);
+(function (window) {
+	
 	//cache some useful method
-	var Vector,
+	var $,
+		Vector,
 		View,
 		Controller,
 		Model,
+		forEach,
 		events,
 		extend,
-		forEach,
 		drag,
 		setSchedule,
 		slice = Array.prototype.slice,
 		has = Object.prototype.hasOwnProperty,
-		fetch = document.getElementById;
+		fetch = document.getElementById.bind(document);
+	/* * * * * * *
+	* a jquery object mockup
+	* main acess point,i use the sign $,same as the jquery,because i have no intention to use it rather to make my own.
+	* @param {String} name of element id
+	* * * * * * * * * * * * * * * * * * * * * * * * * * * */
+	function _$(id){
+		if (id instanceof _$)
+			return id;
+		if (typeof id == "string")
+			this.element = fetch(id);
+		else if (id.tagName)
+			this.element = id;
+	}
+	_$.prototype = {
+		/* * * * * * *
+		* styles: can set multiple css style at once
+		* @param {Object} the key and value in pairs
+		* * * * * * * * * * * * * * * * * * * * * * * * * * * */
+		styles: function(pairs) {
+			forEach(pairs, function(attr, key){ this.element.style[key] = attr; }, this);
+			return this;
+		},
+		/* * * * * * *
+		* invoke: call one of the element's method
+		* @param {Function}
+		* @param {arguments}
+		* * * * * * * * * * * * * * * * * * * * * * * * * * * */
+		invoke: function(method, attr){
+			this.element[method](attr);
+			return this;
+		},
+		/* * * * * * *
+		* set: set the element's property
+		* @param {String} name of property
+		* @param {attr} depends on the nature of property
+		* * * * * * * * * * * * * * * * * * * * * * * * * * * */
+		set: function(property, attr){
+			this.element[property] = attr;
+			return this;
+		},
+		/* * * * * * *
+		* styles: can set multiple css style at once
+		*
+		* @param {Object} the key and value in pairs
+		* * * * * * * * * * * * * * * * * * * * * * * * * * * */
+		get: function(property){
+			return this.element[property];
+		},
+		/* * * * * * *
+		* append the element to a parent node
+		*
+		* @param {Dom Object}
+		* * * * * * * * * * * * * * * * * * * * * * * * * * * */
+		appendTo: function(parent){
+			if (parent.appendChild){
+				parent.appendChild(this.element);
+			}
+		}
+	};
+	/* * * * * * *
+	* main acess point,i use the sign $,same as the jquery,because i have no intention to use it rather to make my own.
+	* @param {String} name of element id
+	*
+	* * * * * * * * * * * * * * * * * * * * * * * * * * * */
+	$ = function (id){ return new _$(id); };
 
+//dom object operation
+	/* * * * * * *
+	* set multiple elements with the same css style
+	* @param {Array} a list of the element id
+	* @param {String} css style property
+	* @param {String} attribute
+	* * * * * * * * * * * * * * * * * * * * * * * * * * * */
+	$.setStyle = function (ids){
+		var cssStyles = arguments[1];
+		forEach(ids, function(id){ $(id).styles(cssStyles); });
+	};
+
+//functional tool
 	/* * * * * * *
 	* for Each instance do action as in context
 	* @param {Object} instance
 	* @param {Function} action
 	* @param {Object} set "this" inside callback
 	* * * * * * * * * * * * * * * * * * * * * * * * * * * */
-	forEach = $.forEach = function (inst, action, context) {
+	forEach = $.forEach = function (obj, action, context) {
 		var i,
 			property,
-			len = inst.length;
-		if (inst instanceof Array) {
+			len = obj.length;
+		if (obj instanceof Array) {
 			for (i = 0; i < len; i++) {
-				action.call(context, inst[i], i, inst);
+				action.call(context, obj[i], i, obj);
 			}
 		} else {
-			for (property in inst) {
-				if (has.call(inst, property)) {
-					action.call(context, inst[property], property, inst);
+			for (property in obj) {
+				if (has.call(obj, property)) {
+					action.call(context, obj[property], property, obj);
 				}
 			}
 		}
 	};
-	extend = $.extend = function (src) {
+	extend = $.extend = function (obj) {
 		var i,
 			property,
 			args = slice.call(arguments, 1),
 			len = args.length;
 		for (i = 0; i < len; i++) {
 			for (property in args[i]) {
-				src[property] = args[i][property];
+				if (has.call(args[i], property))
+					obj[property] = args[i][property];
 			}
 		}
 	};
-		/* * * * * * *
-	 * functionality tool schedule an event to be called a certain times at a certain interval
+	/* * * * * * *
+	 * schedule an event to be called a certain times at a certain interval
 	 * @method setSchedule
 	 * @param {Function} callBack function
-	 * @param {Number} how many times ,100 for default
+	 * @param {Number} how many times
 	 * @param {Number} time in between each call, 1000ms for default
+	 * @param {Object} execution context for callback
 	 * * * * * * * * * * * * * * * * * * * * * * * * * * * */
-	setSchedule = $.setSchedule = function (callBack, times, frequency) {
-		var t = times || 100,
+	setSchedule = $.setSchedule = function (callBack, times, frequency, context) {
+		var t = 0,
+			max = times || 1,
 			f = frequency || 1000,
 			id;
 		(function handler() {
-			if (t-- >= 0) {
-				callBack(f);
+			if (t++ < max) {
+				callBack.call(context, t);
 				id = setTimeout(handler, f);
 			} else {
 				clearTimeout(id);
@@ -77,8 +158,7 @@
 	};
 	/* * * * * * *
 	* event manager
-	* $.Events() to add this components
-	* 
+	* $.events() to add this components
 	* 
 	* * * * * * * * * * * * * * * * * * * * * * * * * * * */
 	events = $.events = function (obj) {
@@ -195,7 +275,7 @@
 			onmouseup: function () {
 				dragthis = null;
 				//obj.dragble.on = false;
-			},
+			}
 		};
 		extend(obj, evt);
 		
@@ -272,6 +352,11 @@
 		getMagnitude: function () {
 			return Math.sqrt(Math.pow(this.x, 2) + Math.pow(this.y, 2));
 		},
+		dotProduct: function(v){
+			if (v instanceof Vector){
+				return this.x * v.x + this.y * v.y;
+			}
+		},
 		add: function (v) {
 			if (v instanceof Vector) {
 				this.x += v.x;
@@ -295,6 +380,19 @@
 		return new Vector(v1.x - v2.x, v1.y - v2.y);
 	};
 
+	window.requestAnimFrame = (function () {
+		return	window.requestAnimationFrame		 ||
+				window.webkitRequestAnimationFrame   ||
+				window.mozRequestAnimationFrame      ||
+				window.oRequestAnimationFrame        ||
+				window.msRequestAnimationFrame       ||
+				function (callback) {
+					window.setTimeout(function () {
+						callback(+new Date());
+					}, 1000 / 60);
+				};
+	}());
+	//attach thie $ sign to global window
+	window.$ = $;
 
-
-}(window.ultimate = window.ultimate || {}));
+}(this));
