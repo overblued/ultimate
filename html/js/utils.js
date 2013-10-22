@@ -16,8 +16,6 @@
 		forEach,
 		events,
 		extend,
-		drag,
-		setSchedule,
 		slice = Array.prototype.slice,
 		has = Object.prototype.hasOwnProperty,
 		fetch = document.getElementById.bind(document);
@@ -29,7 +27,7 @@
 	function _$(id){
 		if (id instanceof _$)
 			return id;
-		if (typeof id == "string")
+		if (typeof id === "string")
 			this.element = fetch(id);
 		else if (id.tagName)
 			this.element = id;
@@ -57,12 +55,12 @@
 		* @param {String} name of property
 		* @param {attr} depends on the nature of property
 		* * * * * * * * * * * * * * * * * * * * * * * * * * * */
-		set: function(property, attr){
-			this.element[property] = attr;
+		set: function(pairs){
+			forEach(pairs, function(attr, key){ if (typeof attr == "function") attr = attr.bind(this); this.element[key] = attr; }, this);
 			return this;
 		},
 		/* * * * * * *
-		* styles: can set multiple css style at once
+		* get:
 		*
 		* @param {Object} the key and value in pairs
 		* * * * * * * * * * * * * * * * * * * * * * * * * * * */
@@ -80,33 +78,43 @@
 			}
 		},
 		/* * * * * * *
-		* schedule: trying to move the setSchedule mothed to here, make it dom dependent
+		* schedule: trying to move the setSchedule method to here, make it dom dependent
+		* 
 		* @param {Function} callBack function
 		* @param {Number} how many times
 		* @param {Number} time in between each call, 1000ms for default
 		* * * * * * * * * * * * * * * * * * * * * * * * * * * */
 		schedule: function (callBack, times, frequency) {
 			var that = this,
-				t = 0,
-				max = times || 1,
+				t = times,
+				max = Math.abs(times) || 1,
+				no,
 				f = frequency || 1000;
 			if (that.scheduleId){
 				clearTimeout(that.scheduleId);
 				that.scheduleId = 0;
 			}
+
 			(function handler() {
-				if (t++ < max) {
-					callBack.call(that, t);
+				if (t) {
+					if(t > 0){
+						t -= 1;
+						no = max - t;
+					}else{
+						t += 1;
+						no = -t;
+					}
+					callBack.call(that, no);
 					that.scheduleId = setTimeout(handler, f);
 				}
 			}());
-		},
+		}
 	};
-	/* * * * * * *
+	/**
 	* main acess point,i use the sign $,same as the jquery,because i have no intention to use it rather to make my own.
 	* @param {String} name of element id
 	*
-	* * * * * * * * * * * * * * * * * * * * * * * * * * * */
+	* * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 	$ = function (id){ return new _$(id); };
 
 //dom object operation
@@ -119,6 +127,10 @@
 	$.setStyles = function (ids){
 		var cssStyles = arguments[1];
 		forEach(ids, function(id){ $(id).styles(cssStyles); });
+	};
+	$.setAttrs = function (ids){
+		var attrs = arguments[1];
+		forEach(ids, function(id){ $(id).set(attrs); });
 	};
 
 //functional tool
