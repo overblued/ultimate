@@ -1,59 +1,98 @@
-/* not css besides here */
-html{text-align: center}
+/*tags -------------------------------------------------------------------------------------------------*/
 
-body { 
-	color: #e6e6fa;
-/*	background-color: #292929;*/
-	background-color: #393939;
+html{
+  height: 100%;
+}
+body {
+	color:#888;
 	overflow: hidden;
-	text-align: center;
+	width:80%;
+	height: 100%;
+	margin:1em auto;
+
 }
 
-div {
-	//position: relative;
-}
-h1{
-	margin: 0.2em 0;
-	font-size: 300%;
-	font-family: Constantia,DejaVu Sans;
-	font-variant: small-caps;
-	/*text-shadow: 0px 3px 1px #666;*/
-}
-
-a {
-	/*border: 1px solid #999999;*/
-	color: #e6e6fa;
-	text-decoration: none;
-	font-family:Verdana,arial,sans-serif;
-	padding:2px;
-	/*margin-top: 2px;*/
-}
-a:hover {color:lightseagreen;}
-
-input, textarea, select {
-	background-color : #323232;
-	color: #e6e6fa;
-}
-
-header {
+/*head section-------------------------------------------------------------------------------------------------*/
+.title{
+	position: relative;
+	left:5%;
 	display: inline-block;
+	margin: 0;
+	font-family: Constantia,DejaVu Sans;
+}
+.title h1{
+	font-size:2.5em;
+	font-variant: small-caps;
+	margin:0;
+}
+#nav{
+	text-align: right;
+	margin: -1.5em 0 0.5em 0;
+}
+#nav a{
+	color: #888;
+	border:1px solid rgba(0,0,0,0.2);
+	font-weight: bold;
+	font-family:Verdana,arial,sans-serif;
+	background-color:#e6e6fa;
+	text-decoration: none;
+	padding:0.25em;
+}
+#bar {
+	border: none;
+	height: 1px;
+	margin:0 0 1em 0;
+	/*-webkit-animation: kitt 4s infinite;*/
 }
 
-canvas{border:thin solid rgba(0, 0, 0, 1);}
-
-#tt {
-	color: rgba(0,0,0,0);
-	/*text-shadow: none;*/
-	-webkit-background-clip: text;
-	-moz-background-clip: text;
-	background-clip: text;
+/*body section-------------------------------------------------------------------------------------------------*/
+#stage{
+	border:1px solid rgba(0,0,0,0.2);
+	border-top-width: 2px;
+	background-color:#e6e6fa;
+	width:100%;
+	height:80%;
+	margin:auto;
+	padding: 0.5em 0.5em 0.5em 8em;
+	box-sizing: border-box;
 }
 
-.subtitles {
-	-webkit-border-radius: 4px; /* Saf3-4 */
-	-moz-border-radius: 4px; /* FF1+ */
-	border-radius: 4px; /* Opera 10.5, IE 9, Saf5, Chrome */
+
+/*generic button-------------------------------------------------------------------------------------------------*/
+#btns{
+	border-right:1px solid rgba(0,0,0,0.2);
+	text-align: center;
+	position: relative;
+	margin:0 0 0 -8em;
+	padding-right: 0.5em;
+	float:left;
+	left:0.5em;
+	width:6em;
+	height:100%;
 }
+.btn {
+	color: #666;
+	background-color:#fff;
+	font-family:Verdana,arial,sans-serif;
+	cursor: pointer;
+	display: block;
+	border-radius: 4px;
+	padding:2px 2px;
+	margin:0.25em;
+	box-shadow: inset 0 0 4px #666;
+	transition: all 0.3s;
+}
+.btn:hover{
+	color:#fff;
+	background-color:#999;
+	box-shadow: 0 0 4px #666;
+}
+.btn:active{
+	background-color:#ccc;
+}
+
+
+
 /*#canvas {
 	position: absolute;
 	z-index: -1;

@@ -10,26 +10,23 @@
 	<script src="js/astar.js"></script>
 </head>
 <body>
-	<header>
-		<h1 id='tt'>Ultimate Project</h1>
-	</header>
-	<br />
-	<nav>
-		<a id="subtitle" class="subtitles" href="/p/u">1111111111111111111111</a>
-		<a id="subtitle2" class="subtitles" href="/p/0">2222222222222222222222</a>
-		<a id="subtitle3" class="subtitles" href="/p/1">3333333333333333333333</a>
-	</nav>
-	<div id='tu' style="height: 0.1em;width:80%;margin:auto;"></div>
-	
-	<div style="position:relative;background-color:#3e3e3e; width:80%;margin:auto;">
-		<div style="position:relative;background-color:#404040; width:98%;height:99%;left:1%;">
-			<div style="position:relative;background-color:#424242; width:98%;height:99%;left:1%;">
-				<div style="position:relative;background-color:#444444; width:98%;height:99%;left:1%;">
-					<div id="stage" style="position:relative;background-color:#464646; min-height:450px;width:98%;left:1%;">
-					</div>
-				</div>
-			</div>
+	<div class="title">
+		<h1>Ultimate Project</h1>
+		<hr id="bar"/>
+		
+	</div>
+	<nav id="nav">
+			<a href="/p/u">Cripples</a>
+			<a href="/p/0">Bastards</a>
+			<a href="/p/1">Broken Things</a>
+		</nav>
+	<div id="stage">
+
+		<div id="btns">
+			<span class="btn">Sunshine</span>
+			<span class="btn">Daisy</span>
+			<span class="btn">Butter</span>
+			<span class="btn">Mellow</span>
 		</div>
 
 	</div>
-		<div id='tu2' style="height: 0.1em;width:96%;margin:auto;"></div>

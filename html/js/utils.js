@@ -56,7 +56,7 @@
 		* @param {attr} depends on the nature of property
 		* * * * * * * * * * * * * * * * * * * * * * * * * * * */
 		set: function(pairs){
-			forEach(pairs, function(attr, key){ if (typeof attr == "function") attr = attr.bind(this); this.element[key] = attr; }, this);
+			forEach(pairs, function(attr, key){ if (typeof attr === "function") attr = attr.bind(this); this.element[key] = attr; }, this);
 			return this;
 		},
 		/* * * * * * *
@@ -84,28 +84,41 @@
 		* @param {Number} how many times
 		* @param {Number} time in between each call, 1000ms for default
 		* * * * * * * * * * * * * * * * * * * * * * * * * * * */
-		schedule: function (callBack, times, frequency) {
+		schedule: function (callBack, sequence, interval, option) {
 			var that = this,
-				t = times,
-				max = Math.abs(times) || 1,
-				no,
-				f = frequency || 1000;
+				i = 1,
+				t = sequence[0],
+				len = sequence.length;
+				f = interval || 1000;
 			if (that.scheduleId){
-				clearTimeout(that.scheduleId);
-				that.scheduleId = 0;
+				if (option === "interupt" || !callBack){
+					clearTimeout(that.scheduleId);
+					that.scheduleId = 0;
+				}else{
+					return;
+				}
 			}
-
+			if (typeof callBack !== "function")
+				return;
 			(function handler() {
-				if (t) {
-					if(t > 0){
-						t -= 1;
-						no = max - t;
-					}else{
+				if (i < len) {
+					callBack.call(that, t);
+					if(t < sequence[i]){
 						t += 1;
-						no = -t;
+					} else if (t > sequence[i]) {
+						t -= 1;
+					} else {
+						i += 1;
 					}
-					callBack.call(that, no);
+				
+					if(i === len && option === "permanent"){
+						i = 1;
+						t = sequence[0];
+					}
+					
 					that.scheduleId = setTimeout(handler, f);
+				}else{
+					that.scheduleId = 0;
 				}
 			}());
 		}

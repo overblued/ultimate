@@ -14,32 +14,22 @@ window.onload = function () { (function (theProject) {
 /*	init	********************************************************************************************************/
 //rainbow title
 	var i,
-		mattr = "-webkit-linear-gradient(left";
+		mattr = "linear-gradient(to right";
 
-	for (i = 0; i <= 36; i++) {
-		mattr += ",hsl(" + i*10 + ", 50%, 80%)";
+	for (i = 0; i <= 20; i++) {
+		var opa = i/5 - i*i/100;
+		mattr += ",rgba(0,0,0," + opa + ")";
 	}
+	//	mattr += ",hsla(" + i*18 + ", 0%, 50%," + opa + ")";
 	//$.get("tu").style.backgroundImage = mattr + ")";
 	//$.get("tt").style.backgroundImage = mattr + ")";
-	$.setStyles(["tt","tu2"], {backgroundImage: mattr + ")"});
+	//$.setStyles(["tt","tu2"], {backgroundImage: mattr + ")"});
+	//$("bar").styles({backgroundImage: mattr + ")"});
+	var kitt=function(t){
+			this.styles({backgroundImage: "linear-gradient(90deg, transparent, red "+(t*2+1)+"%, transparent)"});
+	};
+	$("bar").schedule( kitt, [0,49,1], 40, "permanent");
 
-//gradually hightlight mouseover button: setSchedule test drive
-	var brightness = 27,
-		hslValue = "hsl(0, 0%," + brightness + "%)",
-		steps = 5,
-		lightScale = 8,
-		dimScale = -4,
-		interval = 60;
-		//3, no hard encoded numbers
-	var subs = [$("subtitle"),$("subtitle2"),$("subtitle3")],
-		//1.combine lightup and dimdown , the light changes depends on the given argument
-		changeLight = function(t){ this.styles({backgroundColor: "hsl(0,0%," + (brightness + t * steps) + "%)"}) ; },
-		//2.here i make the schedule accept another parameter to make the times it pass to callback can count down
-		onSwitch = function(lightness){ return function(){ this.schedule( changeLight, lightness, interval);};};
-		
-	$.setStyles(subs, {color: "blue", backgroundColor: hslValue});
-	$.setAttrs(subs, {onmouseout: onSwitch(dimScale), onmouseover: onSwitch(lightScale)});
-	
 //a star
 	$.astar();
 
