@@ -1,0 +1,27 @@
+/* 
+    Document   : link
+    Created on : 2013-10-29, 2:49:27
+    Author     : Overblued
+    Description:
+        for link
+*/
+
+root { 
+    display: block;
+}
+
+#link{
+	display: inline-block;
+	background-color:#e6e6fa;
+	border:2px solid;
+	border-collapse: collapse;
+	/*empty-cells: show;*/
+}
+#link td{
+	width:2em;
+	height:2em;
+	border:1px solid white;
+}
+#link td:hover{
+	background-color:red;
+}

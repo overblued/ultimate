@@ -73,10 +73,10 @@
 		* @param {Dom Object}
 		* * * * * * * * * * * * * * * * * * * * * * * * * * * */
 		appendTo: function(parent){
-			if (parent.appendChild){
-				parent.appendChild(this.element);
-			}
+			$(parent).element.appendChild(this.element);
+			return this;
 		},
+
 		/* * * * * * *
 		* schedule: trying to move the setSchedule method to here, make it dom dependent
 		* 
@@ -121,6 +121,7 @@
 					that.scheduleId = 0;
 				}
 			}());
+			return this;
 		}
 	};
 	/**
@@ -246,7 +247,28 @@
 			return this;
 		}
 	};
-	
+
+	/* * * * * * *
+	* loading an external js/css file
+	* @param {String} takes abitiry numbers of strings
+	* * * * * * * * * * * * * * * * * * * * * * * * * * * */
+	$.load = function(){
+		var files = [].slice.call(arguments);
+		forEach(files, function(src){
+			if (/\.js$/.test(src)){
+				file=document.createElement('script');
+				file.setAttribute("src", src);
+			}
+			if (/\.css$/.test(src)){
+				file=document.createElement('link');
+				file.setAttribute("rel", "stylesheet");
+				file.setAttribute("href", src);
+			}
+			if(file){
+				document.getElementsByTagName("head")[0].appendChild(file);
+			}
+		})
+	};
 	
 	/* * * * * * *
 	* view

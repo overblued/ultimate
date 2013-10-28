@@ -68,8 +68,7 @@
 			
 		};
 		var grid = {
-			init: function(canvas, columns, rows, size){
-				this.canvas = canvas;
+			init: function(columns, rows, size){
 				this.size = size || this.size;
 				this.rows = rows || this.rows;
 				this.columns = columns || this.columns;

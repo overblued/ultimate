@@ -10,28 +10,16 @@ window.onload = function () { (function (theProject) {
 	console.log((theProject.loadOrder)++);
 	console.log(navigator.userAgent);
 	
+//asynchronously load additional js/css files;
+$.load("css/link.css","js/link.js");
 
 /*	init	********************************************************************************************************/
-//rainbow title
-	var i,
-		mattr = "linear-gradient(to right";
-
-	for (i = 0; i <= 20; i++) {
-		var opa = i/5 - i*i/100;
-		mattr += ",rgba(0,0,0," + opa + ")";
-	}
-	//	mattr += ",hsla(" + i*18 + ", 0%, 50%," + opa + ")";
-	//$.get("tu").style.backgroundImage = mattr + ")";
-	//$.get("tt").style.backgroundImage = mattr + ")";
-	//$.setStyles(["tt","tu2"], {backgroundImage: mattr + ")"});
-	//$("bar").styles({backgroundImage: mattr + ")"});
-	var kitt=function(t){
-			this.styles({backgroundImage: "linear-gradient(90deg, transparent, red "+(t*2+1)+"%, transparent)"});
-	};
-	$("bar").schedule( kitt, [0,49,1], 40, "permanent");
-
-//a star
-	$.astar();
+	//hidden message-.-
+	var clr = "black ",
+		kitt = function(t){
+			this.styles({backgroundImage: "linear-gradient(90deg, transparent," +clr + (t*3+1)+"%, transparent)"});
+		};
+	$("bar").schedule( kitt, [-5,38,-4], 40, "permanent").set({onmouseover: function(){clr="red ";document.getElementsByTagName("h1")[0].innerText = "Blow a Tire!"}, onmouseout: function(){clr="black ";document.getElementsByTagName("h1")[0].innerText = "Ultimate Project";}});
 
 
 }(window.ultimate = window.ultimate || {})); };
