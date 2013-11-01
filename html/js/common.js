@@ -19,7 +19,9 @@ $.load("css/link.css","js/link.js");
 		kitt = function(t){
 			this.styles({backgroundImage: "linear-gradient(90deg, transparent," +clr + (t*3+1)+"%, transparent)"});
 		};
-	$("bar").schedule( kitt, [-5,38,-4], 40, "permanent").set({onmouseover: function(){clr="red ";document.getElementsByTagName("h1")[0].innerText = "Blow a Tire!"}, onmouseout: function(){clr="black ";document.getElementsByTagName("h1")[0].innerText = "Ultimate Project";}});
+	$("bar").schedule( kitt, [-5,38,-4], 40, "permanent")
+			.styles({backgroundColor:"transparent"})
+			.set({onmouseover: function(){clr="red ";document.getElementsByTagName("h1")[0].innerText = "Blow a Tire!";}, onmouseout: function(){setTimeout(function(){clr="black ";document.getElementsByTagName("h1")[0].innerText = "Ultimate Project";}, 10000);}});
 
 
 }(window.ultimate = window.ultimate || {})); };

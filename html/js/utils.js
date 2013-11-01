@@ -253,7 +253,7 @@
 	* @param {String} takes abitiry numbers of strings
 	* * * * * * * * * * * * * * * * * * * * * * * * * * * */
 	$.load = function(){
-		var files = [].slice.call(arguments);
+		var files = slice.call(arguments);
 		forEach(files, function(src){
 			if (/\.js$/.test(src)){
 				file=document.createElement('script');

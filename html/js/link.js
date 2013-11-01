@@ -33,7 +33,8 @@
 			return this.cells[this.toIndex(r, c)];
 		},
 		set: function(r, c, data){
-			return this.cells[this.toIndex(r, c)] = data;
+			this.cells[this.toIndex(r, c)] = data;
+			//notify the view to change accordingly;
 		}
 	};
 
@@ -48,6 +49,7 @@
 				r = this.model.rows,
 				c = this.model.columns;
 			for (i = 0; i < r; i++){
+			$.events(this.view);
 				var tr = document.createElement("tr");
 				for (j = 0; j < c; j++){
 					tr.appendChild(document.createElement("td"));
@@ -55,6 +57,7 @@
 				tbl.invoke("appendChild", tr);
 			}
 			tbl.appendTo("stage");
+			tbl.set({onclick:function(e){console.log(e);e.target.style.backgroundColor = "black";}});
 		},
 		update: function(){
 			
@@ -62,6 +65,18 @@
 		
 	};
 
+	var controller = {
+		init: function(view, model){
+			this.view = view;
+			this.model = model;
+			$.events(this.model);
+
+
+			//this.notify("update", r, c, data);
+		},
+		init: function(){},
+
+	};
 	view.init(grid.init(24,15));
 
 }(window.ultimate = window.ultimate || {}) );

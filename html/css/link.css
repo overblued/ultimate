@@ -21,7 +21,11 @@ root {
 	width:2em;
 	height:2em;
 	border:1px solid white;
+	transition:all 1s ease-out;
 }
 #link td:hover{
 	background-color:red;
+}
+#link td:active{
+	background-color:yellow;
 }
