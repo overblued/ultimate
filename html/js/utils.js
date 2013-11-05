@@ -253,7 +253,8 @@
 	* @param {String} takes abitiry numbers of strings
 	* * * * * * * * * * * * * * * * * * * * * * * * * * * */
 	$.load = function(){
-		var files = slice.call(arguments);
+//		var files = slice.call(arguments);
+		var files = arguments;
 		forEach(files, function(src){
 			if (/\.js$/.test(src)){
 				file=document.createElement('script');
@@ -328,6 +329,22 @@
 
 	};
 	/* * * * * * *
+	* Point
+	*
+	*
+	*
+	* * * * * * * * * * * * * * * * * * * * * * * * * * * */
+	$.Point = function(x, y){
+		if (!(this instanceof $.Point)) {
+			return new $.Point(x, y);
+		}
+		this.x = x || 0;
+		this.y = y || 0;
+	}
+	$.Point.prototype.toString = function(){
+		return this.x + "," + this.y
+	}
+	/* * * * * * *
 	* Vector
 	* 
 	* 
@@ -369,6 +386,23 @@
 		return new Vector(v1.x - v2.x, v1.y - v2.y);
 	};
 
+	$.random = function(n){
+		var seed = Math.random();
+		return n ? seed * n >> 0 : seed;
+	};
+	$.shuffle = function(array){
+		var len = array.length - 1,
+			temp,
+			rnd;
+		while(len){
+			rnd = $.random(len);
+			temp = array[len];
+			array[len] = array[rnd];
+			array[rnd] = temp;
+			len -= 1;
+		}
+		return array;
+	};
 	window.requestAnimFrame = (function () {
 		return	window.requestAnimationFrame		 ||
 				window.webkitRequestAnimationFrame   ||
