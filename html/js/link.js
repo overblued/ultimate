@@ -9,7 +9,8 @@
 	//public
 	theProject.loadOrder = theProject.loadOrder || 1;
 	console.log((theProject.loadOrder)++);
-	
+
+	var text = "LianLianKan";
 	var grid,
 		view,
 		controller;
@@ -20,10 +21,10 @@
 			this.cells = this.cells || [];
 			if (this.cells.length !== 0)
 				this.cells.length = 0;
-			this.cells.length = rows * columns;
+			this.cells.length = this.rows * this.columns;
 			return this;
 		},
-		// accept index, coordinate, array,and object contains x key and y key;
+		// accept index, coordinate, array,and any object with property x and y;
 		toIndex: function(x, y){
 			var index;
 			if (typeof y === "number"){
@@ -43,6 +44,9 @@
 		get: function(x,y){
 			return this.cells[this.toIndex(x,y)];
 		},
+		isValid: function(x,y){
+			return this.cells[this.toIndex(x,y)] > 0;
+		},
 		set: function(data, x, y){
 			this.cells[this.toIndex(x,y)] = data;
 			//todo
@@ -53,81 +57,102 @@
 		compare: function(p1,p2){
 			return this.get(p1) === this.get(p2);
 		},
-		randomize: function(){
-			var numOfBricks = (3 * (this.cells.length >> 2)) >> 1,
-				i = numOfBricks;
-			while (i--){
-				this.cells[i] = this.cells[i + numOfBricks] = $.random(19) + 1;
-			}
-			$.shuffle(this.cells);
+		
+		makeHorde: function(){
+			var horde = {};
+			$.forEach(this.cells, function(data, i){
+				if (!horde[data]){
+					horde[data] = [];
+				}
+				horde[data].push(i);
+			});
+			this.horde = horde;
 		}
 	};
 
 	view = {
 		init: function(model){
 			this.model = model;
-			this.data = [];
+			this.data = this.data || [];
+			this.main = $("main");
 			$.events(this);
 
-			var tbl = this.table = $(document.createElement("table"));
-			tbl.set({id: "link"});
+	//prepare the grid;
+			if (!this.table){
+				var tbl = this.table = $(document.createElement("table"));
+				tbl.set({id: "link"});
 
-			var i, j,
-				r = this.model.rows,
-				c = this.model.columns;
-			for (i = 0; i < r; i++){
-				var tr = document.createElement("tr");
-				for (j = 0; j < c; j++){
-					var td = document.createElement("td");
-					this.data.push(td);
-					tr.appendChild(td);
+				var i, j,
+					r = this.model.rows,
+					c = this.model.columns;
+				for (i = 0; i < r; i++){
+					var tr = document.createElement("tr");
+					for (j = 0; j < c; j++){
+						var td = document.createElement("td");
+						this.data.push($(td));
+						tr.appendChild(td);
+					}
+					tbl.invoke("appendChild", tr);
 				}
-				tbl.invoke("appendChild", tr);
 			}
-			tbl.appendTo("main");
+			this.main.set({innerHTML: "<p>" + text + "</p>"});
+			this.table.appendTo(this.main);
+
 		},
-		update: function(){
-			
+		remove: function(){
+			if(this.main){
+				this.table.appendTo(this.main.removeChilds());
+			}
+		},
+		addBrick: function(index, clr){
+			this.data[index].set({innerHTML: "<div class='bricks clr" + clr + "'></div>"});
+		},
+		removeBrick: function(index){
+			this.data[index].removeChilds();
 		},
 		refresh: function(){
-			var len = this.model.cells.length;
-			for( i = 0; i < len; i++){
-				var dat = this.model.cells[i];
-				if (dat > 0){
-					this.data[i].innerHTML = "<div class='bricks clr" + dat + "'></div>";
+			var that = this;
+			$.forEach(that.model.cells,function(dat,i){
+				if (that.model.isValid(i)){
+					that.addBrick(i, that.model.get(i));
+				}else{
+					that.removeBrick(i);
 				}
-			}
+			});
 		},
 		showPath: function(path,c){
-			if (path){
-				var x,y, dirX, dirY,i,j, roads=[];
-				i = path.length - 1;
-				while(i){
-					x = path[i].x;
-					y = path[i].y;
-					dirX = quickMatch(path[i].x, path[i-1].x);
-					dirY = quickMatch(path[i].y, path[i-1].y);
-					j = path[i].x - path[i-1].x + path[i].y - path[i-1].y;
-					while(j){
-						roads.push(this.data[this.model.toIndex(x,y)]);
-						x += dirX;
-						y += dirY;
-						j += dirX + dirY;
-					}
-					i--;
+			var x, y, dirX, dirY, i, j, roads=[];
+			i = path.length - 1;
+			while(i){
+				x = path[i].x;
+				y = path[i].y;
+				dirX = quickMatch(path[i].x, path[i-1].x);
+				dirY = quickMatch(path[i].y, path[i-1].y);
+				j = path[i].x - path[i-1].x + path[i].y - path[i-1].y;
+				while(j){
+					roads.push(this.data[this.model.toIndex(x,y)]);
+					x += dirX;
+					y += dirY;
+					j += dirX + dirY;
 				}
-				roads.push(this.data[this.model.toIndex(path[0])]);
+				i--;
 			}
-			$.forEach(roads,function(node){
-				node.innerHTML="<div class='fading clr" + c + "'></div>";
-				$(node).schedule(function(t){
-					if (t===11){
-						node.innerHTML = "";
-						return;
-					}
-					node.firstChild.className = "fading clr" + c + " level"+ t;
-				},[1,11],30);
-			});
+			roads.push(this.data[this.model.toIndex(path[0])]);
+			i = 0;
+			j = roads.length - 1;
+			(function anim(){
+				roads[i].set({innerHTML: "<div class='fading clr" + c + "'></div>"})
+						.schedule(function(t){
+							if (t===22){
+								this.removeChilds();
+								return;
+							}
+							if (t===3 && i < j){
+								anim(i++);
+							}
+							this.set({innerHTML: "<div class='fading clr" + c + " level" + (t>>1) +"'></div>"});
+						},[2,22],15);
+			})();
 		}
 	};
 
@@ -138,45 +163,56 @@
 			this.previous = null;
 			//prepare
 			this.view.init(this.model.init(24,12));
-
-			this.model.randomize();
-			this.view.refresh();
+			this.reset();
 			//attach controll event
 			this.view.table.set({onclick: this.onClick.bind(this)});
-			//this.notify("update", r, c, data);
 		},
-		//init: function(){}
+		reset: function(){
+			this.model.init();
+
+			var numOfBricks = (3 * (this.model.cells.length >> 2)) >> 1,
+				i = numOfBricks;
+			while (i--){
+				this.model.cells[i] = this.model.cells[i + numOfBricks] = $.random(19) + 1;
+			}
+			$.shuffle(this.model.cells);
+
+			this.view.refresh();
+		},
 		onClick: function(e){
 			var current = e.target,
 				previous = this.previous,
 				path,
 				p1,
 				p2;
-			if (current.tagName === "DIV"){
-				if (previous && previous !== current){
-					p1 = $.Point(previous.parentElement.cellIndex, previous.parentElement.parentElement.sectionRowIndex);
-					p2 = $.Point(current.parentElement.cellIndex, current.parentElement.parentElement.sectionRowIndex);
-					if (this.model.compare(p1,p2)){
-						path = this.link(p1,p2);
+			if (current.tagName === "DIV" && previous !== current){
+				p2 = this.getCoord(current);
+				if (this.model.isValid(p2)){
+					if (previous){
+						p1 = this.getCoord(previous);
+						if (this.model.compare(p1,p2)){
+							path = this.link(p1,p2);
+						}
+						if (path){
+							this.view.showPath(path,this.model.get(p1));
+							this.model.unset(p1);
+							this.model.unset(p2);
+							current = null;
+							this.previous = null;
+						//to do
+						} else {
+							previous.className = previous.className.slice(0, previous.className.search(/ selected/));
+						}
 					}
-					if (path){
-						this.view.showPath(path,this.model.get(p1));
-						this.model.unset(p1);
-						this.model.unset(p2);
-						current = null;
-						this.previous = null;
-					//to do
-					} else {
-						previous.className = previous.className.slice(0, previous.className.search(/ selected/));
+					if (current){
+						this.previous = current;
+						current.className += " selected";
 					}
-				}
-				if (current){
-					current.className += " selected";
-					this.previous = current;
 				}
 			}
 		},
-		onHover: function(e){
+		getCoord: function(elem){
+			return $.Point(elem.parentElement.cellIndex, elem.parentElement.parentElement.sectionRowIndex);
 		},
 		link: function(p1, p2){
 			var border = [this.model.columns, this.model.rows],
@@ -208,7 +244,7 @@
 				while (steps) {
 					p1x += dirX;
 					p1y += dirY;
-					if (map.get(p1x,p1y)){
+					if (map.isValid(p1x,p1y)){
 						return false;
 					}
 					steps += dirX + dirY;
@@ -228,17 +264,17 @@
 				return false;
 			}
 			function checkCaseTwo(p1x, p1y, p2x, p2y){
-				var directions = [[1, 0], [-1, 0], [0, 1], [0, -1]],
-					steps = [p1x - border[0] + 1, p1x, p1y - border[1] + 1, p1y],
-					orders = [	[1, 3, 0, 2],	//case 0
-								[2, 3],		//case 1
-								[1, 2, 0, 3],	//case 2
-								[1, 0],		//case 3
+				var directions = [[1, 0], [0, 1], [-1, 0], [0, -1]],
+					steps = [p1x - border[0] + 1, p1y - border[1] + 1, p1x, p1y],
+					orders = [	[2, 3, 0, 1],	//case 0
+								[1, 3],		//case 1
+								[2, 1, 0, 3],	//case 2
+								[2, 0],		//case 3
 								[],//case none
-								[0, 1],		//case 5
-								[0, 3, 1, 2],	//case 6
-								[3, 2],		//case 7
-								[0, 2, 1, 3] ],	//case 8
+								[0, 2],		//case 5
+								[0, 3, 2, 1],	//case 6
+								[3, 1],		//case 7
+								[0, 1, 2, 3] ],	//case 8
 					tryoutOrder = orders[3 * quickMatch(p1x, p2x) + quickMatch(p1y, p2y) + 4],
 					i = 0, x, y, step, dir;
 				while (i < tryoutOrder.length) {
@@ -249,7 +285,7 @@
 					while(step){
 						x += dir[0];
 						y += dir[1];
-						if (map.get(x, y)){
+						if (map.isValid(x, y)){
 							break;
 						}else if (checkCaseOne(x, y, p2x, p2y)){
 							path.push($.Point(x, y));
@@ -268,5 +304,17 @@
 			return 0;
 		return k > n ? 1 : -1;
 	}
+
+	
+	theProject.link = {
+		start: function(){
+			if (view.main){
+				view.remove();
+			}else{
+				controller.reset();
+			}
+		}
+	};
 	controller.init(view, grid);
+//	theProject.link.start();
 }(window.ultimate = window.ultimate || {}) );

@@ -47,8 +47,7 @@
 		* @param {arguments}
 		* * * * * * * * * * * * * * * * * * * * * * * * * * * */
 		invoke: function(method, attr){
-			this.element[method](attr);
-			return this;
+			return this.element[method](attr);
 		},
 		/* * * * * * *
 		* set: set the element's property
@@ -76,7 +75,10 @@
 			$(parent).element.appendChild(this.element);
 			return this;
 		},
-
+		removeChilds: function(){
+			this.element.innerHTML = "";
+			return this;
+		},
 		/* * * * * * *
 		* schedule: trying to move the setSchedule method to here, make it dom dependent
 		* 
@@ -88,7 +90,7 @@
 			var that = this,
 				i = 1,
 				t = sequence[0],
-				len = sequence.length;
+				len = sequence.length,
 				f = interval || 1000;
 			if (that.scheduleId){
 				if (option === "interupt" || !callBack){
@@ -249,7 +251,7 @@
 	};
 
 	/* * * * * * *
-	* loading an external js/css file
+	* load an external js/css file
 	* @param {String} takes abitiry numbers of strings
 	* * * * * * * * * * * * * * * * * * * * * * * * * * * */
 	$.load = function(){
@@ -268,7 +270,7 @@
 			if(file){
 				document.getElementsByTagName("head")[0].appendChild(file);
 			}
-		})
+		});
 	};
 	
 	/* * * * * * *
@@ -340,10 +342,10 @@
 		}
 		this.x = x || 0;
 		this.y = y || 0;
-	}
+	};
 	$.Point.prototype.toString = function(){
-		return this.x + "," + this.y
-	}
+		return this.x + "," + this.y;
+	};
 	/* * * * * * *
 	* Vector
 	* 

@@ -10,8 +10,6 @@ window.onload = function () { (function (theProject) {
 	console.log((theProject.loadOrder)++);
 	console.log(navigator.userAgent);
 	
-//asynchronously load additional js/css files;
-$.load("css/link.css","js/link.js");
 
 /*	init	********************************************************************************************************/
 	//hidden message-.-
@@ -21,7 +19,30 @@ $.load("css/link.css","js/link.js");
 		};
 	$("bar").schedule( kitt, [-5,38,-4], 40, "permanent")
 			.styles({backgroundColor:"transparent"})
-			.set({onmouseover: function(){clr="red ";document.getElementsByTagName("h1")[0].innerText = "Blow a Tire!";}, onmouseout: function(){setTimeout(function(){clr="black ";document.getElementsByTagName("h1")[0].innerText = "Ultimate Project";}, 10000);}});
+			.set({onmouseover: function(){clr="red ";document.getElementsByTagName("h1")[0].innerText = "Blow a Tire!";}, onmouseout: function(){setTimeout(function(){clr="black ";document.getElementsByTagName("h1")[0].innerText = "Some Project";}, 10000);}});
 
+//asynchronously load additional js/css files;
+	$("buttons").set({onclick:function(e){
+			switch(e.target.innerText){
+				case("Link"):
+					if (!theProject.link){
+						$.load("css/link.css","js/link.js");
+					}else{
+						theProject.link.start();
+					}
+					break;
+				case("A star"):
+					if (!theProject.astar){
+						$.load("js/astar.js");
+					}else{
+						theProject.astar.start();
+					}
+					break;
+				case("Sudoku"):
+					break;
+				default:
+					break;
+			}
+		}});
 
 }(window.ultimate = window.ultimate || {})); };
