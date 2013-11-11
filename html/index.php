@@ -9,16 +9,15 @@
 </head>
 <body>
 	<div class="container">
-		<div class="box c1"></div><div class="box center c4">
+		<div class="box c1"></div><div class="box c4">
 			<div class="title">
 				<h1>Some Project</h1>
 				<hr id="bar" />
 			</div>
-		</div><div class="box c2"></div><div class="box bottom c4">
+		</div><div class="box c2"></div><div class="box bottom right c4">
 			<nav class="nav">
-					<a href="/p/u">Sunshine</a>
-					<a href="/p/0">Daisies</a>
-					<a href="/p/1">Butter</a>
+					<a href="/p/u">Home</a>
+					<a href="/p/u">Projects</a>
 					<div class="tritri">
 						<div class="tri" style="position: relative;left:4px"></div>
 						<div class="tri" style="clear:left;"></div>
@@ -27,17 +26,23 @@
 			</nav>
 		</div><div class="box c1"></div>
 
-		<hr />
 	</div>
-	<div class="container">
-		<div class="box c2">
+	<div class="container"><div class="box center c12">
 			<div id="buttons">
 				<span>Link</span>
 				<span>A star</span>
 				<span>Sudoku</span>
 			</div>
-		</div><div class="box c10">
+		</div>
+		
+	</div>
+	<div class="container"><div class="box c12 center">
 			<main id="main">
 			</main>
 		</div>
+	</div>
+	<div class="container"><footer id="footer">
+			
+		</footer>
+
 	</div>

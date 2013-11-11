@@ -22,7 +22,19 @@ window.onload = function () { (function (theProject) {
 			.set({onmouseover: function(){clr="red ";document.getElementsByTagName("h1")[0].innerText = "Blow a Tire!";}, onmouseout: function(){setTimeout(function(){clr="black ";document.getElementsByTagName("h1")[0].innerText = "Some Project";}, 10000);}});
 
 //asynchronously load additional js/css files;
+	var session;
 	$("buttons").set({onclick:function(e){
+//			e.preventDefault();
+			if (e.target.tagName !== "SPAN"){
+				return;
+			}
+			if (session){
+				if (session === e.target)
+					return;
+				else
+					session.className = "";
+			}
+			session = e.target;
 			switch(e.target.innerText){
 				case("Link"):
 					if (!theProject.link){
@@ -43,6 +55,7 @@ window.onload = function () { (function (theProject) {
 				default:
 					break;
 			}
+			session.className = "selected";
 		}});
-
+$.load("css/link.css","js/link.js");
 }(window.ultimate = window.ultimate || {})); };

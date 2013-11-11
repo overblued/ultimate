@@ -11,9 +11,11 @@
 	console.log((theProject.loadOrder)++);
 
 	var text = "LianLianKan";
+	var pairs = 1;
 	var grid,
 		view,
 		controller;
+	var options = ["Restart","Hint","Rearrange"];
 	grid = {
 		init: function(columns, rows){
 			this.rows = rows || this.rows;
@@ -21,6 +23,7 @@
 			this.cells = this.cells || [];
 			if (this.cells.length !== 0)
 				this.cells.length = 0;
+			this.horde = {};
 			this.cells.length = this.rows * this.columns;
 			return this;
 		},
@@ -48,11 +51,20 @@
 			return this.cells[this.toIndex(x,y)] > 0;
 		},
 		set: function(data, x, y){
-			this.cells[this.toIndex(x,y)] = data;
+			var i = this.toIndex(x,y);
+			if (this.horde[this.get(i)]){
+				this.horde[this.get(i)] = $.filter(this.horde[this.get(i)], function(index){return index !== i;});
+			}
+			if (data && data !== "undefined"){
+				if (!this.horde[data])
+					this.horde[data] = [];
+				this.horde[data].push(i);
+			}
+			this.cells[i] = data;
 			//todo
 		},
 		unset: function(x,y){
-			this.set(null, x, y);
+			this.set("undefined", x, y);
 		},
 		compare: function(p1,p2){
 			return this.get(p1) === this.get(p2);
@@ -67,6 +79,19 @@
 				horde[data].push(i);
 			});
 			this.horde = horde;
+		},
+		shuffle: function(){
+			var len = this.cells.length,
+				temp,
+				rnd;
+			while(--len){
+				rnd = $.random(len);
+				temp = this.cells[len];
+				this.set(this.cells[rnd], len);
+				this.set(temp, rnd);
+//				this.cells[len] = this.cells[rnd];
+//				this.cells[rnd] = temp;
+			}
 		}
 	};
 
@@ -95,13 +120,23 @@
 					tbl.invoke("appendChild", tr);
 				}
 			}
-			this.main.set({innerHTML: "<p>" + text + "</p>"});
-			this.table.appendTo(this.main);
+			if (!this.options){
+				this.options = $(document.createElement("div"));
+				var ops = this.options.set({className: "option"});
+				$.forEach(options,function(label,i){
+					$(document.createElement("span")).appendTo(ops)
+													 .set({innerText:label, className: "clr"+(i+1)});
+				});
+			}
+			this.show();
 
 		},
-		remove: function(){
+		show: function(){
 			if(this.main){
-				this.table.appendTo(this.main.removeChilds());
+				this.main.removeChilds();
+				//this.main.set({innerHTML: "<h3>" + text + "</h3>"});
+				this.options.appendTo(this.main);
+				this.table.appendTo(this.main);
 			}
 		},
 		addBrick: function(index, clr){
@@ -114,7 +149,7 @@
 			var that = this;
 			$.forEach(that.model.cells,function(dat,i){
 				if (that.model.isValid(i)){
-					that.addBrick(i, that.model.get(i));
+					that.addBrick(i, dat);
 				}else{
 					that.removeBrick(i);
 				}
@@ -141,17 +176,22 @@
 			i = 0;
 			j = roads.length - 1;
 			(function anim(){
-				roads[i].set({innerHTML: "<div class='fading clr" + c + "'></div>"})
-						.schedule(function(t){
-							if (t===22){
-								this.removeChilds();
-								return;
-							}
-							if (t===3 && i < j){
-								anim(i++);
-							}
-							this.set({innerHTML: "<div class='fading clr" + c + " level" + (t>>1) +"'></div>"});
-						},[2,22],15);
+				if (roads[i]){
+					roads[i].set({innerHTML: "<div class='fading clr" + c + "'></div>"});
+					if (!(roads[i].schedule(function(t){
+								if (t===22){
+									this.removeChilds();
+									//this.element.removeChild(this.element.firstChild);
+									return;
+								}
+								if (t===3 && i < j){
+									anim(i++);
+								}
+								this.element.firstChild.className = "fading clr" + c + " level" + (t>>1);
+								//this.set({innerHTML: "<div class='fading clr" + c + " level" + (t>>1) +"'></div>"});
+							},[2,22],15)))
+						anim(i++);
+				}
 			})();
 		}
 	};
@@ -166,17 +206,20 @@
 			this.reset();
 			//attach controll event
 			this.view.table.set({onclick: this.onClick.bind(this)});
+			this.view.options.set({onclick: this.onClickOptions.bind(this)});
 		},
 		reset: function(){
 			this.model.init();
-
-			var numOfBricks = (3 * (this.model.cells.length >> 2)) >> 1,
-				i = numOfBricks;
+			var numOfBricks = (this.model.cells.length * pairs) >> 1,
+				i = numOfBricks,
+				clr;
 			while (i--){
-				this.model.cells[i] = this.model.cells[i + numOfBricks] = $.random(19) + 1;
+				clr = $.random(38) + 1;
+				this.model.set(clr,i);
+				this.model.set(clr,i+numOfBricks);
 			}
-			$.shuffle(this.model.cells);
-
+			//$.shuffle(this.model.cells);
+			this.model.shuffle();
 			this.view.refresh();
 		},
 		onClick: function(e){
@@ -194,15 +237,11 @@
 							path = this.link(p1,p2);
 						}
 						if (path){
-							this.view.showPath(path,this.model.get(p1));
-							this.model.unset(p1);
-							this.model.unset(p2);
+							this.found(path);
 							current = null;
-							this.previous = null;
 						//to do
-						} else {
-							previous.className = previous.className.slice(0, previous.className.search(/ selected/));
-						}
+						} 
+						this.clearSelect();
 					}
 					if (current){
 						this.previous = current;
@@ -211,8 +250,74 @@
 				}
 			}
 		},
+		onClickOptions: function(e){
+			if (e.target.tagName !== "SPAN"){
+				return;
+			}
+			this.clearSelect();
+			switch(e.target.innerText){
+				case(options[0]):
+					this.reset();
+					break;
+				case(options[1]):
+					this.findHint();
+					break;
+				case(options[2]):
+					this.rearrange();
+					break;
+				default:
+					break;
+			}
+			
+		},
+		clearSelect: function(){
+			var previous = this.previous;
+			if (previous){
+				previous.className = previous.className.slice(0, previous.className.search(/ selected/));
+				this.previous = null;
+			}
+		},
+		findHint: function(){
+			var i,j,k,path,
+				horde = this.model.horde,
+				that = this;
+			for (k in horde){
+				var g = horde[k];
+				for(i=0;i<g.length-1;i++){
+					for(j=i+1;j<g.length;j++){
+						path = that.link(that.model.toCoord(g[i]),that.model.toCoord(g[j]));
+						if (path){
+							this.found(path);
+							//this.giveHint(path);
+							return;
+						}
+					}
+				}
+			}
+		},
+		giveHint: function(){
+			
+		},
+		rearrange:function(){
+			var i, j=0, temp;
+			temp = $.shuffle($.filter(this.model.cells, function(dat){return dat>0;}));
+			for(i=0;i<temp.length;i++){
+				while(!this.model.isValid(j)){
+					j++;
+				}
+				this.model.set(temp[i],j);
+				j++;
+			}
+			this.view.refresh();
+		},
 		getCoord: function(elem){
 			return $.Point(elem.parentElement.cellIndex, elem.parentElement.parentElement.sectionRowIndex);
+		},
+		found: function(path){
+			var l = path.length-1,c = this.model.get(path[0]);
+			this.model.unset(path[0].x,path[0].y);
+			this.model.unset(path[l].x,path[l].y);
+			this.view.showPath(path,c);
 		},
 		link: function(p1, p2){
 			var border = [this.model.columns, this.model.rows],
@@ -309,7 +414,7 @@
 	theProject.link = {
 		start: function(){
 			if (view.main){
-				view.remove();
+				view.show();
 			}else{
 				controller.reset();
 			}

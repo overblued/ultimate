@@ -76,7 +76,8 @@
 			return this;
 		},
 		removeChilds: function(){
-			this.element.innerHTML = "";
+			while(this.element.firstChild)
+				this.element.removeChild(this.element.firstChild);
 			return this;
 		},
 		/* * * * * * *
@@ -97,7 +98,7 @@
 					clearTimeout(that.scheduleId);
 					that.scheduleId = 0;
 				}else{
-					return;
+					return false;
 				}
 			}
 			if (typeof callBack !== "function")
@@ -396,6 +397,8 @@
 		var len = array.length - 1,
 			temp,
 			rnd;
+		if(len<1)
+			return array;
 		while(len){
 			rnd = $.random(len);
 			temp = array[len];
@@ -404,6 +407,14 @@
 			len -= 1;
 		}
 		return array;
+	};
+	$.filter = function (array, fn) {
+		var i, result = [], len = array.length;
+		for (i = 0; i < len; i++) {
+			if (fn(array[i]))
+				result.push(array[i]);
+		}
+		return result;
 	};
 	window.requestAnimFrame = (function () {
 		return	window.requestAnimationFrame		 ||
