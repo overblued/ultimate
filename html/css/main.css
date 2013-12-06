@@ -14,10 +14,10 @@
 	serif:		Georgia, serif;
 	sans-serif:	Arial, sans-serif;		*/
 
-html{ height:100%; background-color: #e6e6fa; }
+html{ height:100%; background-color: #e6e6fa; user-select:none;-webkit-user-select:none;}
 body { margin:0 auto; height:100%; width: 60em; color: #606060;overflow:hidden; }
 
-hr{margin:0;padding:0}
+hr{margin:0;padding:0;}
 /*typography***************************************************************************************/
 h1,h2,h3,h4{ margin: 0.5em 0 0 0; }
 h1{font: bold small-caps 2em Constantia,serif; }
@@ -110,7 +110,7 @@ span, a{
 	border-bottom: 1px solid #e6e6fa;
 	text-align: center;
 	list-style: none;
-	background-image: linear-gradient(to right, white,#e6e6fa 50%, white);
+	background-image: linear-gradient(to right, #f0f0fa,#fafaff 30%, #fafaff 70%,#f0f0fa);
 }
 
 #buttons span{

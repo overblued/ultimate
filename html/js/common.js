@@ -52,6 +52,9 @@ window.onload = function () { (function (theProject) {
 					break;
 				case("Sudoku"):
 					break;
+				case("Slideshow"):
+					$("main").set({innerHTML:"<iframe src='res/slideshow/slideshow.html' width='700' height='300' style='border:none'></iframe>"});
+					break;
 				default:
 					break;
 			}

@@ -12,10 +12,10 @@
 
 	var text = "LianLianKan";
 	var pairs = 1;
+	var options = ["Restart","Hint","Rearrange","AutoPlay"];
 	var grid,
 		view,
 		controller;
-	var options = ["Restart","Hint","Rearrange"];
 	grid = {
 		init: function(columns, rows){
 			this.rows = rows || this.rows;
@@ -121,10 +121,10 @@
 				}
 			}
 			if (!this.options){
-				this.options = $(document.createElement("div"));
+				this.options = $(document.createElement("ol"));
 				var ops = this.options.set({className: "option"});
 				$.forEach(options,function(label,i){
-					$(document.createElement("span")).appendTo(ops)
+					$(document.createElement("li")).appendTo(ops)
 													 .set({innerText:label, className: "clr"+(i+1)});
 				});
 			}
@@ -134,7 +134,7 @@
 		show: function(){
 			if(this.main){
 				this.main.removeChilds();
-				//this.main.set({innerHTML: "<h3>" + text + "</h3>"});
+//				this.main.set({innerHTML: "<noscript>" + noscriptMsg + "</noscript>"});
 				this.options.appendTo(this.main);
 				this.table.appendTo(this.main);
 			}
@@ -177,8 +177,10 @@
 			j = roads.length - 1;
 			(function anim(){
 				if (roads[i]){
-					roads[i].set({innerHTML: "<div class='fading clr" + c + "'></div>"});
 					if (!(roads[i].schedule(function(t){
+								if (t === 2){
+									this.set({innerHTML: "<div class='fading clr" + c + "'></div>"});
+								}
 								if (t===22){
 									this.removeChilds();
 									//this.element.removeChild(this.element.firstChild);
@@ -187,7 +189,8 @@
 								if (t===3 && i < j){
 									anim(i++);
 								}
-								this.element.firstChild.className = "fading clr" + c + " level" + (t>>1);
+								if(this.element.firstChild)
+									this.element.firstChild.className = "fading clr" + c + " level" + (t>>1);
 								//this.set({innerHTML: "<div class='fading clr" + c + " level" + (t>>1) +"'></div>"});
 							},[2,22],15)))
 						anim(i++);
@@ -209,17 +212,21 @@
 			this.view.options.set({onclick: this.onClickOptions.bind(this)});
 		},
 		reset: function(){
+			//reset data
 			this.model.init();
-			var numOfBricks = (this.model.cells.length * pairs) >> 1,
-				i = numOfBricks,
+			this.numOfBricks = (this.model.cells.length * pairs) >> 1;
+			
+			var	i = this.numOfBricks,
 				clr;
+		
 			while (i--){
 				clr = $.random(38) + 1;
 				this.model.set(clr,i);
-				this.model.set(clr,i+numOfBricks);
+				this.model.set(clr,i+this.numOfBricks);
 			}
-			//$.shuffle(this.model.cells);
+			//shuffle the bricks
 			this.model.shuffle();
+			
 			this.view.refresh();
 		},
 		onClick: function(e){
@@ -251,19 +258,30 @@
 			}
 		},
 		onClickOptions: function(e){
-			if (e.target.tagName !== "SPAN"){
+			if (e.target.tagName !== "LI"){
 				return;
 			}
+			
 			this.clearSelect();
 			switch(e.target.innerText){
 				case(options[0]):
 					this.reset();
 					break;
 				case(options[1]):
+					if (this.auto){
+						break;
+					}
 					this.findHint();
 					break;
 				case(options[2]):
 					this.rearrange();
+					break;
+				case(options[3]):
+					if (this.auto){
+						clearTimeout(this.auto);
+						this.auto = 0;
+					}else
+						this.autoPlay();
 					break;
 				default:
 					break;
@@ -273,7 +291,8 @@
 		clearSelect: function(){
 			var previous = this.previous;
 			if (previous){
-				previous.className = previous.className.slice(0, previous.className.search(/ selected/));
+				//previous.className = previous.className.slice(0, previous.className.search(/ selected/));
+				previous.className = previous.className.replace(" selected", "");
 				this.previous = null;
 			}
 		},
@@ -289,11 +308,12 @@
 						if (path){
 							this.found(path);
 							//this.giveHint(path);
-							return;
+							return true;
 						}
 					}
 				}
 			}
+			return false;
 		},
 		giveHint: function(){
 			
@@ -310,6 +330,18 @@
 			}
 			this.view.refresh();
 		},
+		autoPlay: function(){
+			if (!this.findHint()){
+				if (this.numOfBricks){
+					setTimeout(this.rearrange.bind(this),500);
+				}else{
+					setTimeout(this.reset.bind(this),500);
+				}//return true;
+				this.auto = setTimeout(this.autoPlay.bind(this),1000);
+			}else{
+				this.auto = setTimeout(this.autoPlay.bind(this),100);
+			}
+		},
 		getCoord: function(elem){
 			return $.Point(elem.parentElement.cellIndex, elem.parentElement.parentElement.sectionRowIndex);
 		},
@@ -317,7 +349,9 @@
 			var l = path.length-1,c = this.model.get(path[0]);
 			this.model.unset(path[0].x,path[0].y);
 			this.model.unset(path[l].x,path[l].y);
+			this.numOfBricks -= 1;
 			this.view.showPath(path,c);
+
 		},
 		link: function(p1, p2){
 			var border = [this.model.columns, this.model.rows],
