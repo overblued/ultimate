@@ -1,5 +1,5 @@
 /* * * * * * * * * *
- * My webpage-game-homecenter all-in-one project
+ * My single page app
  *
  * 
  *
@@ -14,14 +14,17 @@ window.onload = function () { (function (theProject) {
 /*	init	********************************************************************************************************/
 	//hidden message-.-
 	var clr = "black ",
+		title = document.getElementsByTagName("h1")[0],
 		kitt = function(t){
-			this.styles({backgroundImage: "linear-gradient(90deg, transparent," +clr + (t*3+1)+"%, transparent)"});
+				this.styles({backgroundImage: "linear-gradient(90deg, transparent," +clr + (t*3+1)+"%, transparent)"});
 		};
 	$("bar").schedule( kitt, [-5,38,-4], 40, "permanent")
 			.styles({backgroundColor:"transparent"})
-			.set({onmouseover: function(){clr="red ";document.getElementsByTagName("h1")[0].innerText = "Blow a Tire!";}, onmouseout: function(){setTimeout(function(){clr="black ";document.getElementsByTagName("h1")[0].innerText = "Some Project";}, 10000);}});
+			.set({
+				  onmouseover: function(){clr="red ";title.innerText = "Blow a Tire!";}
+				, onmouseout: function(){setTimeout(function(){clr="black ";title.innerText = "Some Project";}, 10000);}
+			});
 
-//asynchronously load additional js/css files;
 	var session;
 	$("buttons").set({onclick:function(e){
 //			e.preventDefault();
@@ -60,5 +63,6 @@ window.onload = function () { (function (theProject) {
 			}
 			session.className = "selected";
 		}});
+//asynchronously load additional js/css files;
 $.load("css/link.css","js/link.js");
 }(window.ultimate = window.ultimate || {})); };

@@ -120,9 +120,15 @@ span, a{
 
 #buttons .selected{
 	font-weight: bold;
+	color:black;
 	/*font-size: 1.1em;*/
 }
 #buttons span:hover{
+	color:black;
+}
+
+#buttons .selected:active{
+	font-weight: bold;
 	color:black;
 }
 #buttons span:active{
