@@ -7,15 +7,17 @@
 ( function (theProject) {
 /*	init data ********************************************************************************************************/
 	//public
-	theProject.loadOrder = theProject.loadOrder || 1;
-	console.log((theProject.loadOrder)++);
-
-	var text = "LianLianKan";
-	var pairs = 1;
-	var options = ["Restart","Hint","Rearrange","AutoPlay"];
-	var grid,
+	var pairs = 1,	//percentage
+		options = ["Restart","Hint","Rearrange","AutoPlay"],
+		grid,
 		view,
-		controller;
+		controller,
+		//to hookup with the project
+		app = {
+			name: "Link",
+			description: "A simple link game using table grid"
+		};
+		
 	grid = {
 		init: function(columns, rows){
 			this.rows = rows || this.rows;
@@ -444,6 +446,15 @@
 		return k > n ? 1 : -1;
 	}
 
+	//every project should have a start method
+	app.start = function(){
+		if (view.main){
+			view.show();
+		}else{
+			controller.init(view, grid);
+		}
+	};
+	theProject.new(app);
 	
 	theProject.link = {
 		start: function(){

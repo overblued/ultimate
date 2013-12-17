@@ -25,6 +25,40 @@ window.onload = function () { (function (theProject) {
 				, onmouseout: function(){setTimeout(function(){clr="black ";title.innerText = "Some Project";}, 10000);}
 			});
 
+
+//a way to manage more apps
+	var projects = theProject.projects = {},
+		ressource = {};
+	/* * *
+	 * use this to introduce new app
+	 * * * * * * * * * * * * * * * * * * */
+	theProject.new = (function (){
+		var id = 0;
+		return function (app){
+			id += 1;
+			projects[app.name || ("unnamed" + id)] = app;
+			console.log("%s has been loaded.", app.name);
+		};
+	})();
+	/* * *
+	 * launch app by name or the app itself
+	 * use theProject.current to track current running app
+	 * * * * * * * * * * * * * * * * * * */
+	theProject.launch = function (app){
+		if ( "string" === typeof app){
+			app = this.projects[app]
+		}
+		if (app.start){
+			theProject.current = app;
+			app.start();
+		} else {
+			console.log("App " + app.name + "has no method 'Start'.");
+		}
+	};
+
+
+$.load("css/link.css", "js/link.js", "js/astar.js", "js/sudoku.js");
+
 	var session;
 	$("buttons").set({onclick:function(e){
 //			e.preventDefault();
@@ -40,18 +74,10 @@ window.onload = function () { (function (theProject) {
 			session = e.target;
 			switch(e.target.innerText){
 				case("Link"):
-					if (!theProject.link){
-						$.load("css/link.css","js/link.js");
-					}else{
-						theProject.link.start();
-					}
+					theProject.launch("Link");
 					break;
 				case("A star"):
-					if (!theProject.astar){
-						$.load("js/astar.js");
-					}else{
-						theProject.astar.start();
-					}
+					theProject.launch("A star");
 					break;
 				case("Sudoku"):
 					break;
@@ -64,5 +90,4 @@ window.onload = function () { (function (theProject) {
 			session.className = "selected";
 		}});
 //asynchronously load additional js/css files;
-$.load("css/link.css","js/link.js");
 }(window.ultimate = window.ultimate || {})); };

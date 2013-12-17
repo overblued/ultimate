@@ -7,17 +7,18 @@
 ( function (theProject) {
 /*	init data ********************************************************************************************************/
 	//public
-	theProject.loadOrder = theProject.loadOrder || 1;
-	console.log((theProject.loadOrder)++);
-
-	var tuning = {
-		gridSize: 20,
-		gridColumns: 30,
-		gridRows: 15,
-		gridColor: "#333",
-		cellColor: "#555",
-		dotColor: "red"
-	};
+	var app = {
+			name: "A star",
+			description: ""
+		},
+		tuning = {
+			gridSize: 20,
+			gridColumns: 30,
+			gridRows: 15,
+			gridColor: "#333",
+			cellColor: "#555",
+			dotColor: "red"
+		};
 	var	grid = {
 		init: function(columns, rows){
 			this.rows = rows || this.rows;
@@ -153,6 +154,27 @@
 
 	};
 		
+	function reset(){
+		grid.crumble();
+		painter.update();
+	}
+	app.start = function (){
+		//do the preparation
+		var map = $(document.createElement("canvas"));
+		map.styles({border: "none"})
+		   .set({id: "map", height: tuning.gridRows * tuning.gridSize + 1+ "", width: tuning.gridColumns * tuning.gridSize + 1+""});
+		painter.init(map.invoke("getContext",'2d'), grid.init(tuning.gridColumns,tuning.gridRows));
+
+		grid.crumble();
+		painter.update();
+
+		//rewrite the start function
+		(this.start = function(){
+			map.appendTo($("main").set({innerHTML: ""}));
+		})();
+	};
+	theProject.new(app);
+	
 	theProject.astar = {
 		start: function(){
 			//do the preparation
@@ -169,11 +191,7 @@
 			(this.start = function(){
 				map.appendTo($("main").set({innerHTML: ""}));
 			})();
-		},
-		reset: function(){
-			grid.crumble();
-			painter.update();
-		},
+		}
 	};
-	theProject.astar.start();
+
 }(window.ultimate = window.ultimate || {}) );

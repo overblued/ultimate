@@ -1,5 +1,5 @@
-/*main css -------------------------------------------------------------------------------------------------*/
-/*object: balance clean simple*/
+/* main css -------------------------------------------------------------------------------------------------*/
+/* object: balance clean simple*/
 
 /* colors used: outline l	#e6e6fa,
 				outline h	#afafaf,
@@ -9,7 +9,7 @@
 				highlight	black,
 				shadow		#afafaf		*/
 
-/*3 types of font-family:
+/* 3 types of font-family:
 	monospace:	Consolas, monospace;
 	serif:		Georgia, serif;
 	sans-serif:	Arial, sans-serif;		*/
@@ -61,16 +61,7 @@ span, a{
 .c7 {width: 35em;}.c8 {width: 40em;}.c9 {width: 45em;}.c10 {width: 50em;}.c11 {width: 55em;}.c12 {width: 60em;}
 .bc1{background-color:gold;}
 .bc2{background-color:aqua;}
-/*i thing the pre post idea for takeup empty space is stupid, just an empty box will do*/
-/*.pre1 {padding-left: 5em;}.pre2 {padding-left: 10em;}.pre3 {padding-left: 15em;}
-.pre4 {padding-left: 20em;}.pre5 {padding-left: 25em;}.pre6 {padding-left: 30em;}
-.pre7 {padding-left: 35em;}.pre8 {padding-left: 40em;}.pre9 {padding-left: 45em;}
-.pre10 {padding-left: 50em;}.pre11 {padding-left: 55em;}.pre12 {padding-left: 60em;}
 
-.post1 {padding-right: 5em;}.post2 {padding-right: 10em;}.post3 {padding-right: 15em;}
-.post4 {padding-right: 20em;}.post5 {padding-right: 25em;}.post6 {padding-right: 30em;}
-.post7 {padding-right: 35em;}.post8 {padding-right: 40em;}.post9 {padding-right: 45em;}
-.post10 {padding-right: 50em;}.post11 {padding-right: 55em;}.post12 {padding-right: 60em;}*/
 
 
 /*head section-------------------------------------------------------------------------------------------------*/
@@ -121,21 +112,10 @@ span, a{
 #buttons .selected{
 	font-weight: bold;
 	color:black;
-	/*font-size: 1.1em;*/
 }
 #buttons span:hover{
 	color:black;
 }
-
-#buttons .selected:active{
-	font-weight: bold;
-	color:black;
-}
-#buttons span:active{
-	box-shadow:none;
-	color:#afafaf;
-}
-
 
 /*******-------------------------------------------------------------------------------------------------*/
 
