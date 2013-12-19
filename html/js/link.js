@@ -456,15 +456,5 @@
 	};
 	theProject.new(app);
 	
-	theProject.link = {
-		start: function(){
-			if (view.main){
-				view.show();
-			}else{
-				controller.reset();
-			}
-		}
-	};
-	controller.init(view, grid);
-//	theProject.link.start();
+
 }(window.ultimate = window.ultimate || {}) );

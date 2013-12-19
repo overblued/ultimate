@@ -5,11 +5,7 @@
  *
  * * * * * * * * * * * * * * * * * * * * * * * */
 window.onload = function () { (function (theProject) {
-	//public
-	theProject.loadOrder = theProject.loadOrder || 1;
-	console.log((theProject.loadOrder)++);
 	console.log(navigator.userAgent);
-	
 
 /*	init	********************************************************************************************************/
 	//hidden message-.-
@@ -28,15 +24,20 @@ window.onload = function () { (function (theProject) {
 
 //a way to manage more apps
 	var projects = theProject.projects = {},
-		ressource = {};
+		//ui
+		buttons = $('buttons');
 	/* * *
 	 * use this to introduce new app
 	 * * * * * * * * * * * * * * * * * * */
 	theProject.new = (function (){
-		var id = 0;
+		var id = 0,
+			buttonTemplate = buttons.get('innerHTML');
+		buttons.set({innerHTML: ''});
 		return function (app){
 			id += 1;
 			projects[app.name || ("unnamed" + id)] = app;
+			//for every newly added app, add an ui button
+			buttons.set({innerHTML: buttons.get('innerHTML') + buttonTemplate.replace('{{name}}', app.name)});
 			console.log("%s has been loaded.", app.name);
 		};
 	})();
@@ -52,42 +53,26 @@ window.onload = function () { (function (theProject) {
 			theProject.current = app;
 			app.start();
 		} else {
-			console.log("App " + app.name + "has no method 'Start'.");
+			console.log("App %s has no method 'Start'.", app.name);
 		}
 	};
+	
+	$.load("css/link.css", "js/link.js", "js/astar.js", "js/sudoku.js");
 
-
-$.load("css/link.css", "js/link.js", "js/astar.js", "js/sudoku.js");
-
-	var session;
-	$("buttons").set({onclick:function(e){
-//			e.preventDefault();
-			if (e.target.tagName !== "SPAN"){
-				return;
-			}
-			if (session){
-				if (session === e.target)
-					return;
-				else
-					session.className = "";
-			}
-			session = e.target;
-			switch(e.target.innerText){
-				case("Link"):
-					theProject.launch("Link");
-					break;
-				case("A star"):
-					theProject.launch("A star");
-					break;
-				case("Sudoku"):
-					break;
-				case("Slideshow"):
-					$("main").set({innerHTML:"<iframe src='res/slideshow/slideshow.html' width='700' height='300' style='border:none'></iframe>"});
-					break;
-				default:
-					break;
-			}
-			session.className = "selected";
-		}});
-//asynchronously load additional js/css files;
+	buttons.set({
+		onclick: (function(){
+			var selected;
+			return function (e){
+				//e.preventDefault();
+				if (e.target.tagName !== "SPAN"){ return; }
+				var name = e.target.innerText;
+				if (theProject.current && name === theProject.current.name){ return; }
+				else if (selected) { selected.className = ""; }
+				
+				selected = e.target;
+				selected.className = "selected";
+				theProject.launch(name);
+			};
+		})()
+	});
 }(window.ultimate = window.ultimate || {})); };

@@ -175,23 +175,5 @@
 	};
 	theProject.new(app);
 	
-	theProject.astar = {
-		start: function(){
-			//do the preparation
-			var map = $(document.createElement("canvas"));
-			map.set({id: "map", height: tuning.gridRows * tuning.gridSize + 1+"", width: tuning.gridColumns * tuning.gridSize + 1+""})
-			   .styles({border: "none"});
-
-			painter.init(map.invoke("getContext",'2d'), grid.init(tuning.gridColumns,tuning.gridRows));
-
-			grid.crumble();
-			painter.update();
-
-			//rewrite the start function
-			(this.start = function(){
-				map.appendTo($("main").set({innerHTML: ""}));
-			})();
-		}
-	};
 
 }(window.ultimate = window.ultimate || {}) );

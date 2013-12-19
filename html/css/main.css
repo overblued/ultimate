@@ -97,6 +97,7 @@ span, a{
 }
 #buttons{
 	margin:1em 0 2em 0;
+	padding: 0.25em 0;
 	border-top: 1px solid #e6e6fa;
 	border-bottom: 1px solid #e6e6fa;
 	text-align: center;
@@ -104,16 +105,17 @@ span, a{
 	background-image: linear-gradient(to right, #f0f0fa,#fafaff 30%, #fafaff 70%,#f0f0fa);
 }
 
-#buttons span{
+#buttons li{
 	display: inline-block;
+}
+#buttons > li > span {
 	transition:all 0.2s;
 }
-
-#buttons .selected{
+#buttons > li > .selected{
 	font-weight: bold;
 	color:black;
 }
-#buttons span:hover{
+#buttons > li > span:hover{
 	color:black;
 }
 
