@@ -96,7 +96,6 @@ span, a{
 	-webkit-user-select: none;
 	user-select:none;
 	min-height:30em;
-	box-sizing: border-box;
 }
 #footer{
 	min-height:2em;

@@ -1,31 +1,27 @@
 .showcase{
 	margin:0;
-	padding: 0.25em 0;
-/*	border-top: 1px solid #e6e6fa;*/
+	padding:0;
 	list-style: none;
-/*	background-image: linear-gradient(to right, #f0f0fa,#fafaff 30%, #fafaff 70%,#f0f0fa);*/
 }
 
 .showcase li{
+	text-align: left;
+	box-shadow:0 0 0.25em #ddd;
 	cursor: pointer;
 	vertical-align: top;
 	margin: 1em;
 	border:1px solid #ababab;
 	display: inline-block;
 	transition:all 0.2s;
+	background-image: linear-gradient(to right, #f8f8fa,#fafaff 30%, #fafaff 70%,#f8f8fa);
 }
 .showcase > li > h4 {
+	display: inline-block;
 	margin: 0.5em 2em 0em 1em;
-	text-align: left;
 	border-bottom: 1px solid #ababab
 }
 .showcase > li:hover{
+	margin-top:0.75em;
+	box-shadow:0 0.25em 0.5em #ddd;
 	color: black;
-/*	background-color: #ababab;*/
-/*	cursor: pointer;*/
-/*	color: #fff;*/
-}
-
-.showcase > li > h4:hover {
-
 }
