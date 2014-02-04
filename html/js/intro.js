@@ -1,35 +1,26 @@
 ( function (theProject) {
 /*	init data ********************************************************************************************************/
 
-	var showcase = $(document.createElement('ul'));
-	var itemList = [];
-	var template = '<h4>{{name}}</h4><p>{{des}}</p>';
-	var app;
-	var nav = document.getElementsByClassName('nav')[0];
+	var showcase = $(document.createElement('ul')).set({ className: 'showcase', }),
+		template = '<h4>{{name}}</h4><p>{{des}}</p>',
+		
+		nav = document.getElementsByClassName('nav')[0],
+		menu = nav.children[0],
+		currentLabel = nav.children[1],
 	
-	var menu = nav.children[0]
-	var currentLabel = nav.children[1];
-	
+		app = {
+			name: "Intro",
+			description: "a showcase for all apps",
+			start: function (){
+				//clear main
+				(this.start = function(){
+					showcase.appendTo(theProject.stage);
+				})();
+			}
+		};
+		
 	menu.onclick = function (){ switchApp(app.name) };
 	
-	showcase.set({
-		className: 'showcase',
-		innerHTML: ''
-	});
-	
-	
-	app = {
-		name: "Intro",
-		description: "a showcase for all apps",
-		start: function (){
-			//clear main
-			(this.start = function(){
-				showcase.appendTo(theProject.stage);
-			})();
-		}
-	};
-
-	//
 	function newApp(name){
 		var newOne,
 			itemElem;
@@ -39,7 +30,6 @@
 			itemElem.innerHTML = template.replace('{{name}}', newOne.name)
 										 .replace('{{des}}', newOne.description);
 			itemElem.onclick = function (){ switchApp(name) };
-			itemList.push(itemElem);
 			showcase.invoke('appendChild', itemElem);
 		}
 	}

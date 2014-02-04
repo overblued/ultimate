@@ -17,8 +17,8 @@ window.onload = function () { (function (theProject) {
 					 + clr + (t*3+1)+ "%, transparent)"});
 			};
 		$('title').set({
-					onmouseover: function(){ clr = 'red ';},
-					onmouseout: function (){ clr="black "}
+			onmouseover: function(){ clr = 'red ';},
+			onmouseout: function (){ clr = "black ";}
 		});
 		$("bar").schedule(kitt, [-5,38,-4], 40, "permanent")
 				.styles({backgroundColor: "transparent"})
@@ -53,7 +53,6 @@ window.onload = function () { (function (theProject) {
 	 * use theProject.current to track current running app
 	 * * * * * * * * * * * * * * * * * * */
 	theProject.launch = function (app){
-		//clear main area
 		var that = this;
 		if ( "string" === typeof app){ app = that.apps[app]; }
 		//make sure a start method is there
