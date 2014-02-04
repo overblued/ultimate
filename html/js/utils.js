@@ -104,25 +104,26 @@
 			if (typeof callBack !== "function")
 				return;
 			(function handler() {
-				if (i < len) {
-					callBack.call(that, t);
-					if(t < sequence[i]){
-						t += 1;
-					} else if (t > sequence[i]) {
-						t -= 1;
-					} else {
-						i += 1;
-					}
-				
-					if(i === len && option === "permanent"){
-						i = 1;
-						t = sequence[0];
-					}
-					
-					that.scheduleId = setTimeout(handler, f);
-				}else{
-					that.scheduleId = 0;
+				callBack.call(that, t);
+				if(t < sequence[i]){
+					t += 1;
+				} else if (t > sequence[i]) {
+					t -= 1;
+				} else {
+					i += 1;
 				}
+				
+				if(i === len && option === "permanent"){
+					i = 1;
+					t = sequence[0];
+				}
+				if (i < len){
+					that.scheduleId = setTimeout(handler, f);	
+				}
+				else
+					that.scheduleId = 0;
+
+						
 			}());
 			return this;
 		}

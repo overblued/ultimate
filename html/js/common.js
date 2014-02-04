@@ -9,36 +9,43 @@ window.onload = function () { (function (theProject) {
 
 /*	init	********************************************************************************************************/
 	//hidden message-.-
-	var clr = "black ",
-		title = document.getElementsByTagName("h1")[0],
-		kitt = function(t){
-				this.styles({backgroundImage: "linear-gradient(90deg, transparent," +clr + (t*3+1)+"%, transparent)"});
-		};
-	$("bar").schedule( kitt, [-5,38,-4], 40, "permanent")
-			.styles({backgroundColor:"transparent"})
-			.set({
-				  onmouseover: function(){clr="red ";title.innerText = "Blow a Tire!";}
-				, onmouseout: function(){setTimeout(function(){clr="black ";title.innerText = "Some Project";}, 10000);}
-			});
+	(function (){
+		var clr = "black ",
+			title = document.getElementsByTagName("h1")[0],
+			kitt = function(t){
+					this.styles({backgroundImage: "linear-gradient(90deg, transparent,"
+					 + clr + (t*3+1)+ "%, transparent)"});
+			};
+		$('title').set({
+					onmouseover: function(){ clr = 'red ';},
+					onmouseout: function (){ clr="black "}
+		});
+		$("bar").schedule(kitt, [-5,38,-4], 40, "permanent")
+				.styles({backgroundColor: "transparent"})
+				.set({
+					  onmouseover: function(){ clr="red "; }
+					, onmouseout: function(){ setTimeout(function(){clr="black ";}, 10000);}
+				});
+	})();
 
-
-//a way to manage more apps
-	var projects = theProject.projects = {},
-		//ui
-		buttons = $('buttons');
+	//
+	$.events(theProject);
+	//a way to manage more apps
+	var apps = theProject.apps = {};
+	
+	var stage = theProject.stage = $('main');
 	/* * *
 	 * use this to introduce new app
 	 * * * * * * * * * * * * * * * * * * */
 	theProject.new = (function (){
-		var id = 0,
-			buttonTemplate = buttons.get('innerHTML');
-		buttons.set({innerHTML: ''});
+		//an internal track for the number of apps
+		var id = 0;
 		return function (app){
 			id += 1;
-			projects[app.name || ("unnamed" + id)] = app;
-			//for every newly added app, add an ui button
-			buttons.set({innerHTML: buttons.get('innerHTML') + buttonTemplate.replace('{{name}}', app.name)});
+			apps[app.name || ("unnamed" + id)] = app;
 			console.log("%s has been loaded.", app.name);
+			//triguer an event
+			this.notify('new', app.name);
 		};
 	})();
 	/* * *
@@ -46,33 +53,49 @@ window.onload = function () { (function (theProject) {
 	 * use theProject.current to track current running app
 	 * * * * * * * * * * * * * * * * * * */
 	theProject.launch = function (app){
-		if ( "string" === typeof app){
-			app = this.projects[app]
+		//clear main area
+		var that = this;
+		if ( "string" === typeof app){ app = that.apps[app]; }
+		//make sure a start method is there
+		if (!app.start){
+			console.log("App %s has no method 'Start'.", app.name);
+			return false;
 		}
-		if (app.start){
+		if (!that.current){
+			initLaunch();
+		} else {
+			if (that.current === app){ return; }
+			else {
+				//anime fade out
+				that.stage.schedule(
+					function (tick){
+						this.styles({opacity: tick/10});
+						if (tick === 0){
+							this.removeChilds();
+							initLaunch();
+						}
+					},
+					[9,0], 10, "interupt"
+				);
+			}
+		}
+		
+		function initLaunch(){
 			theProject.current = app;
 			app.start();
-		} else {
-			console.log("App %s has no method 'Start'.", app.name);
+			//anime fadein
+			that.stage.schedule(
+				function (tick){ this.styles({opacity: tick/10}); }
+				,[1,10], 10, "interupt"
+			);
 		}
+				
 	};
 	
+	$.load("css/intro.css", "js/intro.js")
+	
+	//load apps
 	$.load("css/link.css", "js/link.js", "js/astar.js", "js/sudoku.js");
 
-	buttons.set({
-		onclick: (function(){
-			var selected;
-			return function (e){
-				//e.preventDefault();
-				if (e.target.tagName !== "SPAN"){ return; }
-				var name = e.target.innerText;
-				if (theProject.current && name === theProject.current.name){ return; }
-				else if (selected) { selected.className = ""; }
-				
-				selected = e.target;
-				selected.className = "selected";
-				theProject.launch(name);
-			};
-		})()
-	});
+	
 }(window.ultimate = window.ultimate || {})); };

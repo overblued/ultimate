@@ -6,4 +6,9 @@
 /*	init data ********************************************************************************************************/
 	//public
 
+	theProject.new({
+		name: "Sudoku",
+		description: "A sudoku game"
+	});
+	
 }(window.ultimate = window.ultimate || {}) );

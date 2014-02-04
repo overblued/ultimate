@@ -8,6 +8,7 @@
 /*	init data ********************************************************************************************************/
 	//public
 	var pairs = 1,	//percentage
+		numberOfColors = 19,
 		options = ["Restart","Hint","Rearrange","AutoPlay"],
 		grid,
 		view,
@@ -15,8 +16,10 @@
 		//to hookup with the project
 		app = {
 			name: "Link",
-			description: "A simple link game using table grid"
-		};
+			description: "Simple link game using table grid"
+		},
+		stage = theProject.stage,
+		init = false;
 		
 	grid = {
 		init: function(columns, rows){
@@ -101,9 +104,8 @@
 		init: function(model){
 			this.model = model;
 			this.data = this.data || [];
-			this.main = $("main");
 			$.events(this);
-
+			
 	//prepare the grid;
 			if (!this.table){
 				var tbl = this.table = $(document.createElement("table"));
@@ -134,12 +136,13 @@
 
 		},
 		show: function(){
-			if(this.main){
-				this.main.removeChilds();
+			init = true;
+//			if(this.main){
+				//this.main.removeChilds();
 //				this.main.set({innerHTML: "<noscript>" + noscriptMsg + "</noscript>"});
-				this.options.appendTo(this.main);
-				this.table.appendTo(this.main);
-			}
+				this.options.appendTo(stage);
+				this.table.appendTo(stage);
+//			}
 		},
 		addBrick: function(index, clr){
 			this.data[index].set({innerHTML: "<div class='bricks clr" + clr + "'></div>"});
@@ -175,29 +178,33 @@
 				i--;
 			}
 			roads.push(this.data[this.model.toIndex(path[0])]);
-			i = 0;
-			j = roads.length - 1;
-			(function anim(){
+			(function anim(i){
 				if (roads[i]){
-					if (!(roads[i].schedule(function(t){
+					if (!(roads[i].schedule(
+						function(t){
+								//start fading
 								if (t === 2){
 									this.set({innerHTML: "<div class='fading clr" + c + "'></div>"});
 								}
-								if (t===22){
+								//finish fading, remove itself
+								if (t === 22){
 									this.removeChilds();
-									//this.element.removeChild(this.element.firstChild);
 									return;
 								}
-								if (t===3 && i < j){
-									anim(i++);
+								//make fading the next one, with a delay of 1 iteration
+								if (t === 3 && i < roads.length - 1){
+									anim(++i);
 								}
+								//change the fading level
 								if(this.element.firstChild)
 									this.element.firstChild.className = "fading clr" + c + " level" + (t>>1);
-								//this.set({innerHTML: "<div class='fading clr" + c + " level" + (t>>1) +"'></div>"});
-							},[2,22],15)))
-						anim(i++);
+							}
+						, [2, 22], 15))) {
+						//if the schedule function return false(occupied), step to the next one
+						anim(++i);
+					}
 				}
-			})();
+			})(0);
 		}
 	};
 
@@ -222,7 +229,7 @@
 				clr;
 		
 			while (i--){
-				clr = $.random(38) + 1;
+				clr = $.random(numberOfColors) + 1;
 				this.model.set(clr,i);
 				this.model.set(clr,i+this.numOfBricks);
 			}
@@ -448,7 +455,7 @@
 
 	//every project should have a start method
 	app.start = function(){
-		if (view.main){
+		if (init){
 			view.show();
 		}else{
 			controller.init(view, grid);

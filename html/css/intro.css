@@ -1,0 +1,31 @@
+.showcase{
+	margin:0;
+	padding: 0.25em 0;
+/*	border-top: 1px solid #e6e6fa;*/
+	list-style: none;
+/*	background-image: linear-gradient(to right, #f0f0fa,#fafaff 30%, #fafaff 70%,#f0f0fa);*/
+}
+
+.showcase li{
+	cursor: pointer;
+	vertical-align: top;
+	margin: 1em;
+	border:1px solid #ababab;
+	display: inline-block;
+	transition:all 0.2s;
+}
+.showcase > li > h4 {
+	margin: 0.5em 2em 0em 1em;
+	text-align: left;
+	border-bottom: 1px solid #ababab
+}
+.showcase > li:hover{
+	color: black;
+/*	background-color: #ababab;*/
+/*	cursor: pointer;*/
+/*	color: #fff;*/
+}
+
+.showcase > li > h4:hover {
+
+}

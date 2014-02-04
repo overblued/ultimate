@@ -15,22 +15,26 @@
 	sans-serif:	Arial, sans-serif;		*/
 
 html{ height:100%; background-color: #e6e6fa; user-select:none;-webkit-user-select:none;}
-body { margin:0 auto; height:100%; width: 60em; color: #606060;overflow:hidden; }
-
-hr{margin:0;padding:0;}
+body { margin:0 auto; height:100%; width: 60em;
+		color: #606060;
+		background-color: white;
+/*		overflow:hidden;*/
+		box-shadow: 0 0 0.5em #afafaf;
+}
 /*typography***************************************************************************************/
-h1,h2,h3,h4{ margin: 0.5em 0 0 0; }
+
+hr,h1,h2,h3,h4{ margin: 0; padding:0;}
+hr{border: none; height:1px; background-color:#afafaf;}
 h1{font: bold small-caps 2em Constantia,serif; }
 h2{font-size: 1.75em;}h3{font-size: 1.5em;}h4{font-size: 1.25em;}
 h2,h3,h4{font-weight: normal; font-family: georgia,serif;}
 
 p{
-	color:#303030;
+/*	color:#303030;*/
 	font:1em arial,sans-serif;
 	margin:0.5em;
 }
 span, a{
-	text-align: center;
 	color: #606060;
 	font: 1em Verdana,sans-serif;
 	text-decoration: none;
@@ -65,13 +69,12 @@ span, a{
 
 
 /*head section-------------------------------------------------------------------------------------------------*/
-.title{
+#title{
 	display: inline-block;
+	margin:1.5em 0;
 }
-.title #bar{
-	border:none;
-	height:1px;
-	margin-bottom: 0.5em;
+#bar{
+
 }
 .nav a{
 	border:1px solid transparent;
@@ -79,8 +82,9 @@ span, a{
 }
 .nav a:hover{
 	color:black;
-	border-color: #afafaf;
-	box-shadow: 0 0 0.25em #afafaf;
+	text-decoration:underline;
+/*	border-color: #afafaf;*/
+/*	box-shadow: 0 0 0.25em #afafaf;*/
 }
 .nav a:active{
 	box-shadow: none;
@@ -88,40 +92,21 @@ span, a{
 
 /*body section-------------------------------------------------------------------------------------------------*/
 #main{
+	padding:2em;
 	-webkit-user-select: none;
 	user-select:none;
+	min-height:30em;
+	box-sizing: border-box;
 }
 #footer{
-	background-image: linear-gradient(to bottom, white,#e6e6fa);
-	height:10em;
-}
-#buttons{
-	margin:1em 0 2em 0;
-	padding: 0.25em 0;
-	border-top: 1px solid #e6e6fa;
-	border-bottom: 1px solid #e6e6fa;
-	text-align: center;
-	list-style: none;
-	background-image: linear-gradient(to right, #f0f0fa,#fafaff 30%, #fafaff 70%,#f0f0fa);
+	min-height:2em;
 }
 
-#buttons li{
-	display: inline-block;
-}
-#buttons > li > span {
-	transition:all 0.2s;
-}
-#buttons > li > .selected{
-	font-weight: bold;
-	color:black;
-}
-#buttons > li > span:hover{
-	color:black;
-}
 
 /*******-------------------------------------------------------------------------------------------------*/
 
 .tritri{
+	margin:0 0.5em 0 0.5em;
 	display: inline-block;
 	background-color:gold;
 	transition:all 2s ease 2s;
