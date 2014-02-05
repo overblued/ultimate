@@ -14,23 +14,20 @@
 	serif:		Georgia, serif;
 	sans-serif:	Arial, sans-serif;		*/
 
-html{ height:100%; background-color: #e6e6fa; user-select:none;-webkit-user-select:none;}
+html{ height:100%; background-color: white; user-select:none;-webkit-user-select:none;}
 body { margin:0 auto; height:100%; width: 60em;
 		color: #606060;
 		background-color: white;
-/*		overflow:hidden;*/
-		box-shadow: 0 0 0.5em #afafaf;
 }
 /*typography***************************************************************************************/
 
 hr,h1,h2,h3,h4{ margin: 0; padding:0;}
-hr{border: none; height:1px; background-color:#afafaf;}
+hr{border: none; height:1px; background-color:#e6e6fa;}
 h1{font: bold small-caps 2em Constantia,serif; }
 h2{font-size: 1.75em;}h3{font-size: 1.5em;}h4{font-size: 1.25em;}
 h2,h3,h4{font-weight: normal; font-family: georgia,serif;}
 
 p{
-/*	color:#303030;*/
 	font:1em arial,sans-serif;
 	margin:0.5em;
 }
@@ -69,6 +66,11 @@ span, a{
 
 
 /*head section-------------------------------------------------------------------------------------------------*/
+.header {
+	box-shadow: 0 0 0.5em #afafaf;
+	position:relative;
+	border-radius:0 0 0.5em 0.5em;
+}
 #title{
 	display: inline-block;
 	margin:1.5em 0;
@@ -76,7 +78,11 @@ span, a{
 #bar{
 
 }
+.nav {
+	margin-top:1.5em;
+}
 .nav a{
+	font-size:1.5em;
 	border:1px solid transparent;
 	transition:all 0.2s;
 }
@@ -92,10 +98,8 @@ span, a{
 
 /*body section-------------------------------------------------------------------------------------------------*/
 #main{
-	padding:2em;
-	-webkit-user-select: none;
-	user-select:none;
-	min-height:30em;background-color:#eee;
+	padding:1em;
+	min-height:30em;
 }
 #footer{
 	min-height:2em;

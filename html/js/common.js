@@ -80,7 +80,7 @@ window.onload = function () { (function (theProject) {
 				);
 			}
 		}
-		
+		return true;
 		function initLaunch(){
 			theProject.current = app;
 			app.start();

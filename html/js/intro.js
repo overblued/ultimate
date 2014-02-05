@@ -9,7 +9,7 @@
 		currentLabel = nav.children[1],
 	
 		app = {
-			name: "Intro",
+			name: "Menu",
 			description: "a showcase for all apps",
 			start: function (){
 				//clear main
@@ -37,8 +37,8 @@
 	
 	//take the name of an app, launch it.
 	function switchApp(name){
-		currentLabel.innerText = name;
-		theProject.launch(name);
+		if (theProject.launch(name))
+			currentLabel.innerText = name;
 	}
 	
 	theProject.new(app);
