@@ -21,7 +21,7 @@ body { margin:0 auto; height:100%; width: 60em;
 }
 /*typography***************************************************************************************/
 
-hr,h1,h2,h3,h4{ margin: 0; padding:0;}
+hr,h1,h2,h3,h4,ul,li{ margin: 0; padding:0;}
 hr{border: none; height:1px; background-color:#e6e6fa;}
 h1{font: bold small-caps 2em Constantia,serif; }
 h2{font-size: 1.75em;}h3{font-size: 1.5em;}h4{font-size: 1.25em;}
@@ -32,32 +32,28 @@ p{
 	margin:0.5em;
 }
 span, a{
-	color: #606060;
 	font: 1em Verdana,sans-serif;
 	text-decoration: none;
-	padding:0.25em;
+/*	padding:0.25em;*/
 	cursor: pointer;
 }
 
-/*the simple 12 columns grid-------------------------------------------------------------------------------------------------*/
-/*container can hold boxes*/
-.container{
-	width:60em;
-	margin:0 auto;
-	background-color: white;
-}
+/*a simple 12 columns grid----------------------------------*/
+
 .box{
+	text-align: center;
 	display: inline-block;
 	vertical-align: top;
+	box-sizing:border-box;
 }
 
-/*center, top and bottom are to give the box specific align property, default are left and top*/
-.center {text-align: center;}
+/*center, top and bottom are to give the box specific align property, default are center and top*/
+.left {text-align: left;}
 .right {text-align: right;}
 .middle {vertical-align: middle;}
 .bottom {vertical-align: bottom;}
 
-/*cells(columns) that a box can hold: form 1 to 12*/
+/*box width range: form 1 to 12*/
 .c1 {width: 5em;}.c2 {width: 10em;}.c3 {width: 15em;}.c4 {width: 20em;}.c5 {width: 25em;}.c6 {width: 30em;}
 .c7 {width: 35em;}.c8 {width: 40em;}.c9 {width: 45em;}.c10 {width: 50em;}.c11 {width: 55em;}.c12 {width: 60em;}
 .bc1{background-color:gold;}
@@ -65,8 +61,8 @@ span, a{
 
 
 
-/*head section-------------------------------------------------------------------------------------------------*/
-.header {
+/*sections----------------------------------------------*/
+#header {
 	box-shadow: 0 0 0.5em #afafaf;
 	position:relative;
 	border-radius:0 0 0.5em 0.5em;
@@ -75,30 +71,17 @@ span, a{
 	display: inline-block;
 	margin:1.5em 0;
 }
-#bar{
-
-}
-.nav {
+#nav {
 	margin-top:1.5em;
+	height:2em;
+	overflow:hidden;
 }
-.nav a{
-	font-size:1.5em;
-	border:1px solid transparent;
-	transition:all 0.2s;
-}
-.nav a:hover{
-	color:black;
-	text-decoration:underline;
-/*	border-color: #afafaf;*/
-/*	box-shadow: 0 0 0.25em #afafaf;*/
-}
-.nav a:active{
-	box-shadow: none;
-}
-
-/*body section-------------------------------------------------------------------------------------------------*/
+#nav ul{ list-style:none;transition:all 0.2s;margin-top:-2em; }
+#nav li{ height:2em; }
+#nav a { font-size:1.5em; }
+#nav a:hover { color:black; }
 #main{
-	padding:1em;
+	padding:2em;
 	min-height:30em;
 }
 #footer{
