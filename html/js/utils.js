@@ -27,8 +27,13 @@
 	function _$(id){
 		if (id instanceof _$)
 			return id;
-		if (typeof id === "string")
-			this.element = fetch(id);
+		if (typeof id === "string"){
+			if (id[0] === '#' || id[0] === '.'){
+				this.element = document.querySelector(id)
+			}else{
+				this.element = fetch(id);
+			}
+		}
 		else if (id.tagName)
 			this.element = id;
 	}
