@@ -10,22 +10,20 @@ window.onload = function () { (function (theProject) {
 /*	init	********************************************************************************************************/
 	//hidden message-.-
 	(function (){
-		var clr = "black ",
+		var red = "red",
+			black = "black",
+			clr = black,
 			title = document.getElementsByTagName("h1")[0],
 			kitt = function(t){
 					this.styles({backgroundImage: "linear-gradient(90deg, transparent,"
-					 + clr + (t*3+1)+ "%, transparent)"});
+					 + clr + " " + (t*3+1)+ "%, transparent)"});
 			};
-		$('title').set({
-			onmouseover: function(){ clr = 'red ';},
-			onmouseout: function (){ clr = "black ";}
+		$('header').set({
+			onmouseover: function(){ clr = red;},
+			onmouseout: function (){ clr = black;}
 		});
 		$("bar").schedule(kitt, [-5,38,-4], 40, "permanent")
-				.styles({backgroundColor: "transparent"})
-				.set({
-					  onmouseover: function(){ clr="red "; }
-					, onmouseout: function(){ setTimeout(function(){clr="black ";}, 10000);}
-				});
+				.styles({backgroundColor: "transparent"});
 	})();
 
 	//

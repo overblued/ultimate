@@ -8,40 +8,25 @@
 	<script src="js/utils.js"></script>
 </head>
 <body>
-	<div class="container header">
-		<div class="box c1">
-		</div><div class="box c7 bottom">
-			
-		</div><div class="box c3 right">
-			<header id="title">
+	<header class="box c12 left" id="header">
+		<div class="box c1"></div>
+			<div id="title">
 				<h1>Some Project</h1>
 				<hr id="bar" />
-			</header>
-		</div><div class="box c1"></div>
-	</div>
-	<div class="container"><div class="box c1">
-		</div><div class="box c11">
-			<nav class="nav">
-				<a>Menu</a>
-				<a>{{current}}</a>
-			</nav>
-		</div>
-	</div>
-
-	<div class="container"><div class="box c12 center">
-			<main id="main">
-			</main>
-		</div>
-	</div>
-	<div class="container"><div class="box c1">
-	</div><div class="box c10 center">
-		<footer id="footer">
-			<hr />
-			<div class="tritri" title="Triforce">
-				<div class="tri" style="position: relative;left:4px"></div>
-				<div class="tri" style="clear:left;"></div>
-				<div class="tri"></div>
 			</div>
-		</footer>
-	</div><div class="box c1">
-	</div></div>
+	</header>
+	
+	<nav class="box c12" id="nav">
+		<ul><li><a>{{back}}</a></li><li><a>{{current}}</a></li></ul>
+	</nav>
+
+	<main class="box c12" id="main"></main>
+	
+	<footer class="box c12" id="footer">
+		<hr />
+		<div class="tritri" title="Triforce">
+			<div class="tri" style="position: relative;left:4px"></div>
+			<div class="tri" style="clear:left;"></div>
+			<div class="tri"></div>
+		</div>
+	</footer>
