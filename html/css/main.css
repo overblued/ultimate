@@ -95,7 +95,7 @@ span, a{
 	padding:2em;
 	-webkit-user-select: none;
 	user-select:none;
-	min-height:30em;
+	min-height:30em;background-color:#eee;
 }
 #footer{
 	min-height:2em;

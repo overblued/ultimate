@@ -42,6 +42,7 @@ window.onload = function () { (function (theProject) {
 		var id = 0;
 		return function (app){
 			id += 1;
+			$.events(app);
 			apps[app.name || ("unnamed" + id)] = app;
 			console.log("%s has been loaded.", app.name);
 			//triguer an event
@@ -65,6 +66,7 @@ window.onload = function () { (function (theProject) {
 		} else {
 			if (that.current === app){ return; }
 			else {
+				that.current.notify('close');
 				//anime fade out
 				that.stage.schedule(
 					function (tick){
