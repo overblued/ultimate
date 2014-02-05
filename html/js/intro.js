@@ -17,17 +17,25 @@
 					showcase.appendTo(theProject.stage);
 				})();
 			}
-		};console.log(btn2);
+		};
 	//scroll effect
-	menu.set({
+	btn2.set({
 		onmouseover: function (){
 			if (theProject.current !== app){
-				this.styles({marginTop: 0});
+				menu.styles({marginTop: 0});
 			}
-		},
-		onmouseout: function (){
+		}
+	});
+	menu.set({
+		onmouseout: function (e){
+			//to prevent onmouseout triger on child nodes;
+			var to = e.toElement || e.relatedTarget;
+			while(to.parentElement !== null){
+				if ((to = to.parentElement) === this.element){return;}
+			}
+			
 			if (theProject.current !== app)
-			this.styles({marginTop: '-2em'});
+				this.styles({marginTop: '-2em'});
 		}
 	});
 	
