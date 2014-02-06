@@ -55,7 +55,7 @@ window.onload = function () { (function (theProject) {
 			apps[app.name] = app;
 			console.log("%s has been loaded.", app.name);
 			//triguer an event
-			this.notify('new', app.name);
+			this.notify('new', app);
 			
 			if (app.autostart)
 				this.launch(app);
@@ -110,6 +110,7 @@ window.onload = function () { (function (theProject) {
 	
 	//load apps
 	$.load("css/link.css", "js/link.js", "js/astar.js", "js/sudoku.js");
+	$.load("css/slideshow.css", "js/slideshow.js")
 
 	
 }(window.ultimate = window.ultimate || {})); };

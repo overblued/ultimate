@@ -21,10 +21,10 @@
 				//because this app won't always be the first to load
 				// the 'new' event may not be invoke for previous loaded apps
 				$.forEach(theProject.apps, function (app){
-					newApp(app.name);
+					newApp(app);
 				});
 				
-				theProject.attach('new', function (name){ newApp(name);	});
+				theProject.attach('new', newApp);
 				
 				menu.set({
 					onmouseout: function (e){
@@ -65,16 +65,14 @@
 	//privileged methods
 	//----------------------------------------------------------------------
 	
-	function newApp(name){
-		var newOne,
-			itemElem;
-		newOne = theProject.apps[name];
-		if (newOne.hidden){ return; }
+	function newApp(app){
+		var itemElem;
+		if (app.hidden){ return; }
 		else {
 			itemElem = document.createElement('li');
-			itemElem.innerHTML = template.replace('{{name}}', newOne.name)
-										 .replace('{{des}}', newOne.description);
-			itemElem.onclick = function (){ switchApp(name) };
+			itemElem.innerHTML = template.replace('{{name}}', app.name)
+										 .replace('{{des}}', app.description);
+			itemElem.onclick = function (){ switchApp(app.name) };
 			showcase.invoke('appendChild', itemElem);
 		}
 	}
