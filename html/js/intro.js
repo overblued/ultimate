@@ -1,51 +1,69 @@
-( function (theProject) {
-/*	init data ********************************************************************************************************/
+/* * *
+ *
+ * an intro menu
+ *
+ * * * * * * * * * * * * * * * * * * */
 
-	var showcase = $(document.createElement('ul')).set({ className: 'showcase', }),
+( function (theProject) {
+
+		//private var
+	var showcase = $(document.createElement('ul')).set({ className: 'showcase' }),
 		template = '<h4>{{name}}</h4><p>{{des}}</p>',
 		
 		menu = $('#nav ul'),
 		btn1 = $('#nav ul li:nth-child(1) a'),
 		btn2 = $('#nav ul li:nth-child(2) a'),
-	
+		//the app to be exported
 		app = {
 			name: "Menu",
 			description: "a showcase for all apps",
 			start: function (){
+				//because this app won't always be the first to load
+				// the 'new' event may not be invoke for previous loaded apps
+				$.forEach(theProject.apps, function (app){
+					newApp(app.name);
+				});
+				
+				theProject.attach('new', function (name){ newApp(name);	});
+				
+				menu.set({
+					onmouseout: function (e){
+						//to prevent onmouseout triger on child nodes;
+						var to = e.toElement || e.relatedTarget;
+						while(to.parentElement !== null){
+							if ((to = to.parentElement) === this.element){return;}
+						}
+			
+						if (theProject.current !== app)
+							this.styles({marginTop: '-2em'});
+					}
+				});
+				//scroll effect
+				btn2.set({
+					onmouseover: function (){
+						if (theProject.current !== app){
+							menu.styles({marginTop: 0});
+						}
+					}
+				});
+				//make it a home button
+				btn1.set({
+					innerText: app.name,
+					onclick: function (){ switchApp(app.name); }
+				});
 				//clear main
 				(this.start = function(){
 					showcase.appendTo(theProject.stage);
 				})();
 			},
-			hidden: true
+			hidden: true,
+			autostart: true
 		};
-	//scroll effect
-	btn2.set({
-		onmouseover: function (){
-			if (theProject.current !== app){
-				menu.styles({marginTop: 0});
-			}
-		}
-	});
-	menu.set({
-		onmouseout: function (e){
-			//to prevent onmouseout triger on child nodes;
-			var to = e.toElement || e.relatedTarget;
-			while(to.parentElement !== null){
-				if ((to = to.parentElement) === this.element){return;}
-			}
-			
-			if (theProject.current !== app)
-				this.styles({marginTop: '-2em'});
-		}
-	});
 	
-	//make it a home button
-	btn1.set({
-		innerText: app.name,
-		onclick: function (){ switchApp(app.name); }
-	});
-	
+	theProject.new(app);
+
+	//privileged methods
+	//----------------------------------------------------------------------
 	
 	function newApp(name){
 		var newOne,
@@ -60,7 +78,6 @@
 			showcase.invoke('appendChild', itemElem);
 		}
 	}
-	theProject.attach('new', function (name){ newApp(name);	});
 	
 	//take the name of an app, launch it.
 	function switchApp(name){
@@ -73,7 +90,4 @@
 	function menuText(txt){
 		btn2.set({innerText: txt});
 	}
-	theProject.new(app);
-	//launche this immediatly after loading;
-	switchApp(app.name);
 }(window.ultimate = window.ultimate || {}) );

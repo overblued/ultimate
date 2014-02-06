@@ -42,7 +42,8 @@ window.onload = function () { (function (theProject) {
 			common = {
 				name: 'App no.' + id,
 				description: 'No description',
-				hidden: false
+				hidden: false,
+				autostart: false
 			};
 		
 		return function (app){
@@ -55,6 +56,9 @@ window.onload = function () { (function (theProject) {
 			console.log("%s has been loaded.", app.name);
 			//triguer an event
 			this.notify('new', app.name);
+			
+			if (app.autostart)
+				this.launch(app);
 		};
 	})();
 	/* * *
