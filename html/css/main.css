@@ -21,7 +21,7 @@ body { margin:0 auto; height:100%; width: 60em;
 }
 /*typography***************************************************************************************/
 
-hr,h1,h2,h3,h4,ul,li{ margin: 0; padding:0;}
+hr,h1,h2,h3,h4,p,ul,li,div,tr,td,table{ margin: 0; padding:0;}
 hr{border: none; height:1px; background-color:#afafaf;}
 h1{font: bold small-caps 2em Constantia,serif; }
 h2{font-size: 1.75em;}h3{font-size: 1.5em;}h4{font-size: 1.25em;}
@@ -29,7 +29,6 @@ h2,h3,h4{font-weight: normal; font-family: georgia,serif;}
 
 p{
 	font:1em arial,sans-serif;
-	margin:0.5em;
 }
 a{
 	font: 1em Verdana,sans-serif;

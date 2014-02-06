@@ -1,6 +1,4 @@
 .showcase{
-	margin:0;
-	padding:0;
 	min-height:20em;
 	list-style: none;
 }
@@ -22,6 +20,9 @@
 	display: inline-block;
 	margin: 0.5em 2em 0em 1em;
 	border-bottom: 1px solid #ababab
+}
+.showcase > li > p {
+	margin:0.5em;
 }
 .showcase > li:hover{
 	margin-top:0.75em;
