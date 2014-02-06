@@ -43,6 +43,7 @@ a{
 	text-align: center;
 	display: inline-block;
 	vertical-align: top;
+	-moz-box-sizing:border-box;
 	box-sizing:border-box;
 }
 

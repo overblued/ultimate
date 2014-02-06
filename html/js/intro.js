@@ -30,7 +30,7 @@
 					onmouseout: function (e){
 						//to prevent onmouseout triger on child nodes;
 						var to = e.toElement || e.relatedTarget;
-						while(to.parentElement !== null){
+						while(to && to.parentElement !== null){
 							if ((to = to.parentElement) === this.element){return;}
 						}
 			
@@ -48,7 +48,7 @@
 				});
 				//make it a home button
 				btn1.set({
-					innerText: app.name,
+					innerHTML: app.name,
 					onclick: function (){ switchApp(app.name); }
 				});
 				//clear main
@@ -88,6 +88,6 @@
 		}
 	}
 	function menuText(txt){
-		btn2.set({innerText: txt});
+		btn2.set({innerHTML: txt});
 	}
 }(window.ultimate = window.ultimate || {}) );

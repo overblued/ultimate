@@ -129,7 +129,7 @@
 				var ops = this.options.set({className: "option"});
 				$.forEach(options,function(label,i){
 					$(document.createElement("li")).appendTo(ops)
-													 .set({innerText:label, className: "clr"+(i+1)});
+													 .set({innerHTML:label, className: "clr"+(i+1)});
 				});
 			}
 			this.show();
@@ -272,7 +272,7 @@
 			}
 			
 			this.clearSelect();
-			switch(e.target.innerText){
+			switch(e.target.innerHTML){
 				case(options[0]):
 					this.reset();
 					break;
