@@ -186,7 +186,7 @@
 			len = args.length;
 		for (i = 0; i < len; i++) {
 			for (property in args[i]) {
-				if (has.call(args[i], property))
+				if (has.call(args[i], property) && !has.call(obj, property))
 					obj[property] = args[i][property];
 			}
 		}

@@ -37,11 +37,21 @@ window.onload = function () { (function (theProject) {
 	 * * * * * * * * * * * * * * * * * * */
 	theProject.new = (function (){
 		//an internal track for the number of apps
-		var id = 0;
+		var id = 0,
+			//wrap some default settings to an obj
+			common = {
+				name: 'App no.' + id,
+				description: 'No description',
+				hidden: false
+			};
+		
 		return function (app){
 			id += 1;
+			//common attr
 			$.events(app);
-			apps[app.name || ("unnamed" + id)] = app;
+			$.extend(app, common);
+			//
+			apps[app.name] = app;
 			console.log("%s has been loaded.", app.name);
 			//triguer an event
 			this.notify('new', app.name);
@@ -60,11 +70,13 @@ window.onload = function () { (function (theProject) {
 			return false;
 		}
 		if (!that.current){
+			that.current = app;
 			initLaunch();
 		} else {
 			if (that.current === app){ return; }
 			else {
 				that.current.notify('close');
+				that.current = app;
 				//anime fade out
 				that.stage.schedule(
 					function (tick){
@@ -80,7 +92,6 @@ window.onload = function () { (function (theProject) {
 		}
 		return true;
 		function initLaunch(){
-			theProject.current = app;
 			app.start();
 			//anime fadein
 			that.stage.schedule(

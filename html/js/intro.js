@@ -16,7 +16,8 @@
 				(this.start = function(){
 					showcase.appendTo(theProject.stage);
 				})();
-			}
+			},
+			hidden: true
 		};
 	//scroll effect
 	btn2.set({
@@ -49,8 +50,9 @@
 	function newApp(name){
 		var newOne,
 			itemElem;
-		if (app.name === name){ return; }
-		if (newOne = theProject.apps[name]){
+		newOne = theProject.apps[name];
+		if (newOne.hidden){ return; }
+		else {
 			itemElem = document.createElement('li');
 			itemElem.innerHTML = template.replace('{{name}}', newOne.name)
 										 .replace('{{des}}', newOne.description);

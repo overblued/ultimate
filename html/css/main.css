@@ -22,7 +22,7 @@ body { margin:0 auto; height:100%; width: 60em;
 /*typography***************************************************************************************/
 
 hr,h1,h2,h3,h4,ul,li{ margin: 0; padding:0;}
-hr{border: none; height:1px; background-color:#e6e6fa;}
+hr{border: none; height:1px; background-color:#afafaf;}
 h1{font: bold small-caps 2em Constantia,serif; }
 h2{font-size: 1.75em;}h3{font-size: 1.5em;}h4{font-size: 1.25em;}
 h2,h3,h4{font-weight: normal; font-family: georgia,serif;}
@@ -31,10 +31,9 @@ p{
 	font:1em arial,sans-serif;
 	margin:0.5em;
 }
-span, a{
+a{
 	font: 1em Verdana,sans-serif;
 	text-decoration: none;
-/*	padding:0.25em;*/
 	cursor: pointer;
 }
 
@@ -56,15 +55,12 @@ span, a{
 /*box width range: form 1 to 12*/
 .c1 {width: 5em;}.c2 {width: 10em;}.c3 {width: 15em;}.c4 {width: 20em;}.c5 {width: 25em;}.c6 {width: 30em;}
 .c7 {width: 35em;}.c8 {width: 40em;}.c9 {width: 45em;}.c10 {width: 50em;}.c11 {width: 55em;}.c12 {width: 60em;}
-.bc1{background-color:gold;}
-.bc2{background-color:aqua;}
-
 
 
 /*sections----------------------------------------------*/
 #header {
-	box-shadow: 0 0 0.5em #afafaf;
 	position:relative;
+	box-shadow: 0 0 0.5em #afafaf;
 	border-radius:0 0 0.5em 0.5em;
 }
 #title{
@@ -76,16 +72,19 @@ span, a{
 	height:2em;
 	overflow:hidden;
 }
-#nav ul{ list-style:none;transition:all 0.2s;margin-top:-2em; }
+#nav ul{ list-style:none;transition:all 0.2s; }
 #nav li{ height:2em; }
 #nav a { font-size:1.5em; }
 #nav a:hover { color:black; }
+
 #main{
 	padding:2em;
 	min-height:30em;
 }
 #footer{
 	min-height:2em;
+	box-shadow: 0 0 0.5em #afafaf;
+	border-radius:0.5em 0.5em 0 0;
 }
 
 
