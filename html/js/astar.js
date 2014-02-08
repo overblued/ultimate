@@ -6,54 +6,140 @@
  * * * * * * * * * * * * * * * * * * * * * * * */
 ( function (theProject) {
 /*	init data ********************************************************************************************************/
-	//public
-	var app = {
-			name: "A star",
-			description: "A star search with binary heap"
-		},
-		tuning = {
+	//some parameters
+	var tuning = {
 			gridSize: 20,
 			gridColumns: 30,
 			gridRows: 15,
 			gridColor: "#333",
 			cellColor: "#555",
-			dotColor: "red"
-		},
-		astar;
-		
-	var	grid = {
-		init: function(columns, rows){
-			this.rows = rows || this.rows;
-			this.columns = columns || this.columns;
-			this.cells = this.cells || [];
-			if (this.cells.length !== 0)
-				this.cells.length = 0;
-			this.cells.length = this.rows * this.columns;
-			return this;
-		},
-		// accept index, coordinate, array,and object contains x key and y key;
-		toIndex: function(x, y){
-			var index;
-			if (typeof y === "number"){
-				index = y * this.columns + x;
-			} else if (x instanceof Array){
-				index = x[1] * this.columns + x[0];
-			} else if (typeof x === "object"){
-				index = x.y * this.columns + x.x;
-			} else {
-				index = x;
+			dotColor: "red",
+			//composite attr
+			get height(){
+				return this.gridRows * this.gridSize + 1;
+			},
+			get width(){
+				return this.gridColumns * this.gridSize + 1;
 			}
-			return index;
 		},
-		toCoord: function(n){
-			return new $.Point(n % this.columns, n / this.columns | 0);
+		//the search alg
+		astar,
+		//a 2d grid constructor
+		grid,
+		//draw on canvas
+		painter,
+		//a binary heap constructor
+		BinaryHeap,
+		//
+		dot,
+		//the app itself
+		app = {
+			name: "A star",
+			description: "A star search with binary heap",
+			start: function (){
+				//main workflow
+
+				//prepare the canvas
+				var dot = new Dot();
+					map = $(document.createElement("canvas"));
+				map.styles({border: "none"})
+				   .set({
+						 height: tuning.height
+						,width: tuning.width
+						,onclick: function (e){
+							
+							if (e.target.tagName === 'CANVAS'){
+								var gridX = ~~(e.offsetX / tuning.gridSize),
+									gridY = ~~(e.offsetY / tuning.gridSize);
+								dot.move({x: gridX, y: gridY});
+							}
+						}
+					});
+				
+				painter.init(map.invoke("getContext",'2d'), new Grid(tuning.gridColumns,tuning.gridRows, tuning.gridSize));
+
+				painter.data.crumble();
+				painter.update();
+				
+				dot.add({x:0,y:0});
+				//rewrite the start function
+				(this.start = function(){ map.appendTo(theProject.stage); })();
+			}
+		};
+	
+	
+	Dot = function (){
+		this.x = undefined;
+		this.y = undefined;
+		this.onstage = false;
+	}
+	Dot.prototype = {
+		 get p(){
+			if (this.onstage)
+				return {x: this.x, y: this.y};
+			else
+				return false;
+		}
+		,set p(p){
+			this.x = p.x;
+			this.y = p.y;
+		}
+		,move: function (p){
+			if (this.onstage && painter.paintable(p)){
+				painter.clearCell(this.p);
+				painter.drawDot(this.p = p);
+				return true;
+			}else
+				return false;
+		}
+		,remove: function (){
+			if (this.onstage)
+				painter.clearCell({x: this.x, y: this.y});
+		}
+		,add: function (p){
+			if (painter.paintable(p)){
+				painter.drawDot(this.p = p);
+				this.onstage = true;
+			}else{
+				return false;
+			}
+		}
+	};
+	
+	/* * *
+	 * Grid
+	 * a 2d grid 
+	 * @param {Number} columns 
+	 * @param {Number} rows
+	 * @param {Object} the object the cells host
+	 * * * * * * * * * * * * * * * * * * */
+	Grid = function(c, r, s){
+		this.columns = c;
+		this.rows = r;
+		this.size = s;
+		this.length = c * r;
+		this.cells = Array(this.length);
+		
+		for(var i = 0; i < this.length; i++)
+			this.cells[i] = undefined;
+	};
+	Grid.prototype = {
+		index: function(p){
+			return p.y * this.columns + p.x;
 		},
-		get: function(x,y){
-			return this.cells[this.toIndex(x,y)];
+		point: function(i){
+			return {x: i % this.columns, y: i / this.columns | 0};
 		},
-		set: function(data, x, y){
-			this.cells[this.toIndex(x,y)] = data;
-			//todo
+		//retrieve a cell member
+		get: function(p){
+			if (p.y >= this.rows)
+				p.y = this.rows - 1;
+			if (p.x >= this.columns)
+				p.x = this.columns - 1;
+			return this.cells[this.index(p)];
+		},
+		set: function(data, p){
+			this.cells[this.index(x,y)] = data;
 		},
 		unset: function(x,y){
 			this.set(null, x, y);
@@ -62,50 +148,30 @@
 			return this.get(p1) === this.get(p2);
 		},
 		crumble: function(){
-			var i,
-				len = this.cells.length;
-			for(i = 0; i < len; i++){
+		
+			$.forEach(this.cells, function (v,k,a){
 				if (Math.random() < 0.2){
-					this.cells[i] = 0;
+					a[k] = 0;
 				}
-			}
-			for(i = 0; i < len; i++){
-				if (Math.random() < 0.2){
-					this.cells[i] = 1;
-				}
-			}
-		},
-		makeHorde: function(){
-			var horde = {};
-			$.forEach(this.cells, function(data, i){
-				if (!horde[data]){
-					horde[data] = [];
-				}
-				horde[data].push(i);
 			});
-			this.horde = horde;
 		}
 	};
-	var painter = {
+	painter = {
 		init: function(ctx, data){
-			if (ctx){
-				ctx.translate(0.5, 0.5);
-				ctx.linecap = "square";
-				this.ctx = ctx;
-				this.size = tuning.gridSize;;
-			}
-			this.data = data || this.data;
+			ctx.translate(0.5, 0.5);
+			ctx.linecap = "square";
+			this.ctx = ctx;
+			this.size = tuning.gridSize;;
+			this.data = data;
 			this.drawGrid();
 		},
 		update: function(){
 			var that = this;
 			$.forEach(this.data.cells, function(data,i){
 				if (data === 0){
-					that.drawCell(that.data.toCoord(i));
-				}else if (data ===1){
-					that.drawDot(that.data.toCoord(i));
+					that.drawCell(that.data.point(i));
 				}else
-					that.clearCell(that.data.toCoord(i));
+					that.clearCell(that.data.point(i));
 			});
 		},
 		drawGrid: function(){
@@ -152,6 +218,9 @@
 		clearCell: function(p){
 			var s = this.size;
 			this.ctx.clearRect(p.x * s + 0.5, p.y * s + 0.5, s - 1, s - 1);
+		},
+		paintable: function (p){
+			return !(this.data.get(p) === 0);
 		}
 
 	};
@@ -228,7 +297,7 @@
 	 * @param {function} a compare function, optional
 	 * * * * * * * * * * * * * * * * * * */
 
-	function BinaryHeap( fn ){
+	BinaryHeap = function( fn ){
 		this.fn = fn || this.defaultfn;
 		this.stack = [];
 	}
@@ -298,29 +367,13 @@
 			return a < b;
 		}
 	};
-	
+//private functions	
 //--------------------------------------------------------------------------------------------------------------------
 	function reset(){
 		grid.crumble();
 		painter.update();
 	}
-	app.start = function (){
-		//do the preparation
-		var map = $(document.createElement("canvas"));
-		map.styles({border: "none"})
-		   .set({id: "map", height: tuning.gridRows * tuning.gridSize + 1+ "", width: tuning.gridColumns * tuning.gridSize + 1+""});
-		painter.init(map.invoke("getContext",'2d'), grid.init(tuning.gridColumns,tuning.gridRows));
-
-		grid.crumble();
-		painter.update();
-
-		//rewrite the start function
-		(this.start = function(){
-			map.appendTo($("main").set({innerHTML: ""}));
-		})();
-	};
-	
+	//always new this app to main project
 	theProject.new(app);
-	
 
 }(window.ultimate = window.ultimate || {}) );
