@@ -30,7 +30,7 @@
 				</div>'
 	theProject.new({
 		name: "Slideshow",
-		description: "Pure CSS slideshow with<br \\>hidden radio button & label",
+		description: "Pure CSS slideshow",
 		start: function (){
 			theProject.stage.set({innerHTML: tmp});
 		}
