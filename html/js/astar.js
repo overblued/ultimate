@@ -13,7 +13,7 @@
 			gridRows: 15,
 			gridColor: "#333",
 			cellColor: "#555",
-			dotColor: "red",
+			dotColor: "#8f00ff",
 			//composite attr
 			get height(){
 				return this.gridRows * this.gridSize + 1;
@@ -22,90 +22,131 @@
 				return this.gridColumns * this.gridSize + 1;
 			}
 		},
+		//base object
+		Base,
+		//inheret from thing
+		Dot,
+		Wall,
 		//the search alg
-		astar,
+		Astar,
 		//a 2d grid constructor
 		grid,
 		//draw on canvas
 		painter,
 		//a binary heap constructor
 		BinaryHeap,
-		//
-		dot,
 		//the app itself
 		app = {
 			name: "A star",
 			description: "A star search with binary heap",
 			start: function (){
 				//main workflow
-
-				//prepare the canvas
-				var dot = new Dot();
+				var dot = new Dot(),
+					grid = new Grid(tuning.gridColumns,tuning.gridRows, tuning.gridSize),
+					astar = new Astar(grid),
 					map = $(document.createElement("canvas"));
+				//prepare the canvas				
 				map.styles({border: "none"})
 				   .set({
 						 height: tuning.height
 						,width: tuning.width
 						,onclick: function (e){
-							
 							if (e.target.tagName === 'CANVAS'){
 								var gridX = ~~(e.offsetX / tuning.gridSize),
-									gridY = ~~(e.offsetY / tuning.gridSize);
-								dot.move({x: gridX, y: gridY});
+									gridY = ~~(e.offsetY / tuning.gridSize),
+									path;
+								console.log(path = astar.search(grid.index(dot.p), grid.index({x: gridX, y: gridY})));
+								painter.draw(path);
+								dot.blink({x: gridX, y: gridY});
+								
 							}
 						}
 					});
+				//paint				
+				painter.init(map.invoke("getContext",'2d'), grid);
+				//make some wall in grid
+				$.forEach(grid.cells, function (v,k,a){
+					if (Math.random() < 0.2){
+						a[k] = new Wall(grid.point(k));
+					}
+				});
+				//replace the first cell with the dot
+				if (grid.cells[0] !== null){
+					grid.cells[0].remove();
+				}
+				grid.cells[0] = dot.add(grid.point(0));
 				
-				painter.init(map.invoke("getContext",'2d'), new Grid(tuning.gridColumns,tuning.gridRows, tuning.gridSize));
-
-				painter.data.crumble();
-				painter.update();
-				
-				dot.add({x:0,y:0});
 				//rewrite the start function
 				(this.start = function(){ map.appendTo(theProject.stage); })();
 			}
 		};
 	
-	
-	Dot = function (){
-		this.x = undefined;
-		this.y = undefined;
-		this.onstage = false;
-	}
-	Dot.prototype = {
-		 get p(){
-			if (this.onstage)
-				return {x: this.x, y: this.y};
-			else
-				return false;
+	Base = function (p){
+		if (p){	this.add(p)	}
+		else {
+			this.x = undefined;
+			this.y = undefined;
+			this.onstage = false;
+		}
+	};
+	Base.prototype = {
+		//properties
+		get p(){
+			return {x: this.x, y: this.y};
 		}
 		,set p(p){
 			this.x = p.x;
 			this.y = p.y;
 		}
-		,move: function (p){
-			if (this.onstage && painter.paintable(p)){
-				painter.clearCell(this.p);
-				painter.drawDot(this.p = p);
-				return true;
-			}else
-				return false;
-		}
+		//methods
 		,remove: function (){
-			if (this.onstage)
+			if (this.onstage){
 				painter.clearCell({x: this.x, y: this.y});
+				this.onstage = false;
+			}
 		}
 		,add: function (p){
-			if (painter.paintable(p)){
-				painter.drawDot(this.p = p);
-				this.onstage = true;
+			if (!this.onstage){
+				var tmp = this.p;
+				this.p = p;
+				if (painter.draw(this));
+					this.onstage = true;
+				return this;
 			}else{
 				return false;
 			}
 		}
 	};
+	//inherit from thing
+	Dot = function (p){
+		Base.call(this,p)
+	};
+	Dot.prototype = Object.create(Base.prototype, {
+		name: {value: 'dot', enumerable: true,}
+	});
+	Dot.prototype.move = function (p){
+		if (this.onstage){
+			return this;
+		}else
+			return false;
+	};
+	Dot.prototype.blink = function (p){
+		var tmp = this.p;
+		this.p = p
+		if (this.onstage && painter.draw(this, tmp)){
+			return this;
+		}else{
+			this.p = tmp;
+			return false;
+		}
+	};
 	
+	Wall = function (p){
+		Base.call(this,p)
+	};
+	Wall.prototype = Object.create(Base.prototype, {
+		name: {value: 'wall', enumerable: true,}
+	});
 	/* * *
 	 * Grid
 	 * a 2d grid 
@@ -121,7 +162,7 @@
 		this.cells = Array(this.length);
 		
 		for(var i = 0; i < this.length; i++)
-			this.cells[i] = undefined;
+			this.cells[i] = null;
 	};
 	Grid.prototype = {
 		index: function(p){
@@ -147,15 +188,11 @@
 		compare: function(p1,p2){
 			return this.get(p1) === this.get(p2);
 		},
-		crumble: function(){
-		
-			$.forEach(this.cells, function (v,k,a){
-				if (Math.random() < 0.2){
-					a[k] = 0;
-				}
-			});
-		}
+		isOccupied: function (p){
+			return Boolean(this.get(p));
+		},
 	};
+	
 	painter = {
 		init: function(ctx, data){
 			ctx.translate(0.5, 0.5);
@@ -164,15 +201,6 @@
 			this.size = tuning.gridSize;;
 			this.data = data;
 			this.drawGrid();
-		},
-		update: function(){
-			var that = this;
-			$.forEach(this.data.cells, function(data,i){
-				if (data === 0){
-					that.drawCell(that.data.point(i));
-				}else
-					that.clearCell(that.data.point(i));
-			});
 		},
 		drawGrid: function(){
 			var	i,j,
@@ -205,24 +233,45 @@
 			ctx.closePath();
 		},
 		//draw a dot at point p;
-		drawDot: function(p){
+		drawDot: function(p,r){
 			var ctx = this.ctx,
 				s = this.size,
-				rad = Math.abs(s/2 - 1.5);
+				rad = r || Math.abs(s/2 - 1.5);
 			ctx.beginPath();
 			ctx.arc(p.x * s + s/2, p.y * s + s/2, rad, 0, Math.PI*2, false);
 			ctx.fillStyle = tuning.dotColor;
 			ctx.fill();
 			ctx.closePath();
 		},
+		//new draw
+		draw: function (obj, from){
+			var that = this;
+			if (obj instanceof Array){
+				obj.forEach(function (v){
+					that.drawDot(that.data.point(v), 2);
+				});
+				return true;
+			}
+			if (!this.paintable(obj.p)){
+				return false
+			}
+			if (from){
+				this.clearCell(from);
+			}
+			if (obj.name === 'dot'){
+				this.drawDot(obj.p);
+			}else if (obj.name === 'wall'){
+				this.drawCell(obj.p);
+			}
+			return true;
+		},
 		clearCell: function(p){
 			var s = this.size;
 			this.ctx.clearRect(p.x * s + 0.5, p.y * s + 0.5, s - 1, s - 1);
 		},
 		paintable: function (p){
-			return !(this.data.get(p) === 0);
+			return !this.data.isOccupied(p)
 		}
-
 	};
 /* * *
  *
@@ -268,27 +317,116 @@
   * * * * * * * * * * * * * * * * * * */
 
 
-	astar = function (map){
+	Astar = function (map){
 		this.map = map;
-		
 	};
 	
-	astar.prototype = {
-		prep: function (start){
-			this.closedset = [];
-			this.openset = [start];
-			this.g_score = [0]; // this is a binary heap
-		},
+	Astar.prototype = {
 		search: function (start, goal){
-			this.prep(start);
+			//initiation
+			this.prep(start, goal);
+			
+			var that = this,
+				diagnal = 14,
+				adjacent = 10,
+				gTmp,
+				neighbors,
+				current;
+			console.log(start,goal);
+			while((current = that.fscore.pop()) !== false){
+				//pop out the first one in fscore heap, add it to closedset;
+				that.addToClosedSet(current);
+				//found!
+				if (current === goal){
+					return that.retrievePath(current);
+				}
+				
+				neighbors = that.getNeighbors(current);
+				
+				neighbors.forEach(function (v, k){
+					//if it's a wall or out of range or in closeset
+					if (v === null || that.map.cells[v] || that.closedset[v]){
+						return ;
+					} else {
+						gTmp = that.closedset[current].g + (k > 3 ? diagnal : adjacent);
+						//if it's in openset
+						if (that.openset[v]){
+							if (that.openset[v].g > gTmp){
+								//make current parent node of this neignbor
+								that.openset[v].from = current;
+								that.openset[v].g = gTmp;
+							}
+						}else{
+							that.addToOpenSet(v, current, gTmp);
+						}
+					}
+				});
+				
+				
+			}
+		},
+		prep: function (start, goal){
+			this.start = start;
+			this.goal = goal;
+			this.closedset = {};
+			
+			var os = this.openset = {};
+			this.openset[start] = {f: 0,g: 0,from: null};
+			
+			this.fscore = new BinaryHeap(function (a,b){
+				return os[a].f < os[b].f;
+			});
+			this.fscore.push(start);
 		},
 		//the manhattan distance
-		heuristic: function (p1, p2){
-	        return Math.abs(p2.x - p1.x) + Math.abs(p2.y - p1.y);
+		heuristic: function (i, j){
+			return 10 * (Math.abs(~~((i-j)/this.map.columns)) + Math.abs(i % this.map.columns - j % this.map.columns));
 		},
-		getNeighbors: function (){
-			
+		getNeighbors: function (i){
+			var c = this.map.columns,
+				nbs = [
+					i - c,		//0
+					i + c,		//1
+					i - 1,		//2
+					i + 1,		//3
+					i - c - 1,	//4
+					i - c + 1,	//5
+					i + c - 1,	//6
+					i + c + 1	//7
+				];
+			if ( nbs[0] < 0 || this.map.cells[nbs[0]]){
+				nbs[0] = nbs[4] = nbs[5] = null;
+			}
+			if ( nbs[1] > this.map.length || this.map.cells[nbs[1]]){
+				nbs[1] = nbs[6] = nbs[7] = null;
+			}
+			if ( i % c === 0 || this.map.cells[nbs[2]]){
+				nbs[2] = nbs[4] = nbs[6] = null;
+			}
+			if ( nbs[3] % c === 0 || this.map.cells[nbs[3]]){
+				nbs[3] = nbs[5] = nbs[7] = null;
+			}
+			return nbs;
 		},
+		addToOpenSet: function (i, from, g){
+			this.openset[i] = {
+				f: this.heuristic(i, this.goal),
+				g: g,
+				from: from
+			};
+			this.fscore.push(i);
+		},
+		addToClosedSet: function (index){
+			this.closedset[index] = this.openset[index];
+			delete this.openset[index];
+		},
+		retrievePath: function (i){
+			var path = [];
+			while((i = this.closedset[i].from) !== null){
+				path.push(i);
+			}
+			return path;
+		}
 	};
 	/* * *
 	 * BinaryHeap
@@ -308,19 +446,24 @@
 			this.siftup();
 		},
 		pop: function (){
-			if (this.stack.length){
-				var item = this.stack[0],
-					len = this.stack.length - 1;
-				if (len){
-					this.stack[0] = this.stack[len];
-					this.stack.length = len;
-			
-					this.siftdown();
-				}
-				return item;
+			var item = this.stack[0],
+				len = this.stack.length;
+			if (len === 0){
+				return false;
 			}
-			//nothing to pop
-			return false;
+			if (len < 3){
+				if (len === 2)
+					this.stack[0] = this.stack[1];
+				this.stack.length -= 1;
+			}else {
+				this.stack[0] = this.stack[len - 1];
+				this.stack.length = len - 1;
+				this.siftdown();
+			}
+			return item;
+		},
+		get length(){
+			return this.stack.length;
 		},
 		siftup: function (){
 			var index = this.stack.length - 1;
@@ -365,13 +508,17 @@
 		// a default compare function
 		defaultfn: function (a, b){
 			return a < b;
+		},
+		kill: function (){
+			this.stack.length = 0;
 		}
 	};
 //private functions	
 //--------------------------------------------------------------------------------------------------------------------
-	function reset(){
-		grid.crumble();
-		painter.update();
+	function isEmpty(o){
+		for (var v in o)
+			return true;
+		return false
 	}
 	//always new this app to main project
 	theProject.new(app);
