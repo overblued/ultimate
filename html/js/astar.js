@@ -11,26 +11,29 @@
 			gridSize: 20,
 			gridColumns: 30,
 			gridRows: 15,
-			gridColor: "#333",
-			cellColor: "#555",
+			gridColor: "#666",
+			cellColor: "#888",
 			dotColor: "#8f00ff",
+			border: 2,
+			moveSpeed: 25,
+			wallFactor: 0.2,
 			//composite attr
 			get height(){
-				return this.gridRows * this.gridSize + 1;
+				return this.gridRows * this.gridSize ;
 			},
 			get width(){
-				return this.gridColumns * this.gridSize + 1;
+				return this.gridColumns * this.gridSize;
 			}
 		},
 		//base object
 		Base,
-		//inheret from thing
+		//inheret from Base
 		Dot,
 		Wall,
 		//the search alg
 		Astar,
 		//a 2d grid constructor
-		grid,
+		Grid,
 		//draw on canvas
 		painter,
 		//a binary heap constructor
@@ -41,45 +44,82 @@
 			description: "A star search with binary heap",
 			start: function (){
 				//main workflow
+				// all instantiation happen here
 				var dot = new Dot(),
 					grid = new Grid(tuning.gridColumns,tuning.gridRows, tuning.gridSize),
 					astar = new Astar(grid),
-					map = $(document.createElement("canvas"));
+					map = $(document.createElement("canvas")),
+					btns = $(document.createElement("ul")),
+					searching = false;
 				//prepare the canvas				
-				map.styles({border: "none"})
+				map.styles({border: tuning.border + "px solid " + tuning.gridColor})
 				   .set({
 						 height: tuning.height
 						,width: tuning.width
-						,onclick: function (e){
+						,onclick: function clickHandler(e){
+							if (e.offsetX >= tuning.width || e.offsetY < 1 
+								|| e.offsetY >= tuning.height || e.offsetY < 1){
+								return
+							}
 							if (e.target.tagName === 'CANVAS'){
 								var gridX = ~~(e.offsetX / tuning.gridSize),
 									gridY = ~~(e.offsetY / tuning.gridSize),
-									path;
-								console.log(path = astar.search(grid.index(dot.p), grid.index({x: gridX, y: gridY})));
-								painter.draw(path);
-								dot.blink({x: gridX, y: gridY});
-								
+									p = {x: gridX, y: gridY},
+									path,
+									i = grid.index(p);
+								if (e.ctrlKey){
+									dot.blink(p);
+									return;
+								}
+								if (grid.cells[i]){
+									return;
+								}
+								if (!searching){
+									searching = true;
+									path = astar.search(grid.index(dot.p), i);
+									if (path){
+										painter.draw(path);
+										dot.remove();
+										grid.cells[grid.index(dot.p)] = null;
+										setTimeout(function (){
+											dot.add(p);
+											grid.cells[i] = dot;
+											searching = false;
+										}, tuning.moveSpeed * path.length);
+									}else{
+										searching = false;
+									}
+								}
 							}
 						}
 					});
-				//paint				
+				//paint
 				painter.init(map.invoke("getContext",'2d'), grid);
 				//make some wall in grid
 				$.forEach(grid.cells, function (v,k,a){
-					if (Math.random() < 0.2){
+					if (k === 0){
+						a[k] = dot.add(grid.point(0));
+					}else if (Math.random() < tuning.wallFactor){
 						a[k] = new Wall(grid.point(k));
 					}
 				});
-				//replace the first cell with the dot
-				if (grid.cells[0] !== null){
-					grid.cells[0].remove();
-				}
-				grid.cells[0] = dot.add(grid.point(0));
 				
+				btns.set({
+						innerHTML: "<li><a>Grid</a></li>\
+									<li><a>Wall</a></li>"
+					})
+					.styles({
+						display:'inline-block',
+						verticalAlign: 'top'
+					});
 				//rewrite the start function
-				(this.start = function(){ map.appendTo(theProject.stage); })();
+				(this.start = function(){
+					map.appendTo(theProject.stage);
+					//btns.appendTo(theProject.stage);
+				})();
 			}
 		};
+		
 	
 	Base = function (p){
 		if (p){	this.add(p)	}
@@ -101,7 +141,7 @@
 		//methods
 		,remove: function (){
 			if (this.onstage){
-				painter.clearCell({x: this.x, y: this.y});
+				painter.clearCell(this.p);
 				this.onstage = false;
 			}
 		}
@@ -195,7 +235,8 @@
 	
 	painter = {
 		init: function(ctx, data){
-			ctx.translate(0.5, 0.5);
+			this.translate = 0.5;
+			ctx.translate(this.translate,this.translate);
 			ctx.linecap = "square";
 			this.ctx = ctx;
 			this.size = tuning.gridSize;;
@@ -211,12 +252,12 @@
 			ctx.strokeStyle = tuning.gridColor;
 			ctx.lineWidth = 1;
 			ctx.beginPath();
-			for (i = 0; i <= r; i++){
-				ctx.moveTo(0, i * s );
+			for (i = 1; i < r; i++){
+				ctx.moveTo(-this.translate, i * s );
 				ctx.lineTo(c * s, i * s );
 			}
-			for (j = 0; j <= c; j++){
-				ctx.moveTo(j * s , 0);
+			for (j = 1; j < c; j++){
+				ctx.moveTo(j * s , -this.translate);
 				ctx.lineTo(j * s , r * s);
 			}
 			ctx.stroke();
@@ -227,7 +268,7 @@
 			var ctx = this.ctx,
 				s = this.size;
 			ctx.beginPath();
-			ctx.rect(p.x * s , p.y * s, s, s);
+			ctx.rect(p.x * s - this.translate, p.y * s - this.translate, s, s);
 			ctx.fillStyle = tuning.cellColor;
 			ctx.fill();
 			ctx.closePath();
@@ -243,19 +284,31 @@
 			ctx.fill();
 			ctx.closePath();
 		},
+		drawTrace: function (obj){
+			var that = this,
+				len = obj.length - 1,
+				speed = tuning.moveSpeed * len;
+			obj.forEach(function (v, k){
+				setTimeout(function (){
+					that.drawDot(that.data.point(v), 4);
+					setTimeout(function (){
+						that.clearCell(that.data.point(v));
+					}, speed);
+				}, speed - Math.floor(speed * k/len));
+			});
+		},
 		//new draw
 		draw: function (obj, from){
-			var that = this;
 			if (obj instanceof Array){
-				obj.forEach(function (v){
-					that.drawDot(that.data.point(v), 2);
-				});
+				this.drawTrace(obj);
 				return true;
 			}
 			if (!this.paintable(obj.p)){
 				return false
 			}
 			if (from){
+				this.data.cells[this.data.index(from)] = null;
+				this.data.cells[this.data.index(obj)] = obj;
 				this.clearCell(from);
 			}
 			if (obj.name === 'dot'){
@@ -274,16 +327,10 @@
 		}
 	};
 /* * *
- *
  * A* search algorithme
  *
- *
- * 
- 
- ------------------------------------------------------------------------------------------------------------------- 
  pseudocode from wikipedia
- ------------------------------------------------------------------------------------------------------------------- 
-
+ ----------------------------------------------------------------------------
  function A*(start,goal)
     closedset := the empty set    // The set of nodes already evaluated.
     openset := {start}    // The set of tentative nodes to be evaluated, initially containing the start node
@@ -313,9 +360,7 @@
                 if neighbor not in openset
                     add neighbor to openset
     return failure
-------------------------------------------------------------------------------------------------------------------- 
-  * * * * * * * * * * * * * * * * * * */
-
+ ----------------------------------------------------------------------------*/
 
 	Astar = function (map){
 		this.map = map;
@@ -330,9 +375,10 @@
 				diagnal = 14,
 				adjacent = 10,
 				gTmp,
+				fTmp,
 				neighbors,
 				current;
-			console.log(start,goal);
+
 			while((current = that.fscore.pop()) !== false){
 				//pop out the first one in fscore heap, add it to closedset;
 				that.addToClosedSet(current);
@@ -345,25 +391,26 @@
 				
 				neighbors.forEach(function (v, k){
 					//if it's a wall or out of range or in closeset
-					if (v === null || that.map.cells[v] || that.closedset[v]){
+					if (v === null || that.map.cells[v]){
 						return ;
 					} else {
 						gTmp = that.closedset[current].g + (k > 3 ? diagnal : adjacent);
-						//if it's in openset
-						if (that.openset[v]){
-							if (that.openset[v].g > gTmp){
-								//make current parent node of this neignbor
-								that.openset[v].from = current;
-								that.openset[v].g = gTmp;
-							}
-						}else{
+						if (that.closedset[v] && (that.closedset[v].f <= gTmp + that.closedset[v].h)){
+							return;
+						}
+						if (!that.openset[v]){
 							that.addToOpenSet(v, current, gTmp);
+						}
+						//it's in openset
+						if (that.openset[v].f > gTmp + that.openset[v].h){
+							//make current parent node of this neignbor
+							that.openset[v].from = current;
+							that.openset[v].g = gTmp;
 						}
 					}
 				});
-				
-				
 			}
+			return false;
 		},
 		prep: function (start, goal){
 			this.start = start;
@@ -397,7 +444,7 @@
 			if ( nbs[0] < 0 || this.map.cells[nbs[0]]){
 				nbs[0] = nbs[4] = nbs[5] = null;
 			}
-			if ( nbs[1] > this.map.length || this.map.cells[nbs[1]]){
+			if ( nbs[1] >= this.map.length || this.map.cells[nbs[1]]){
 				nbs[1] = nbs[6] = nbs[7] = null;
 			}
 			if ( i % c === 0 || this.map.cells[nbs[2]]){
@@ -410,8 +457,9 @@
 		},
 		addToOpenSet: function (i, from, g){
 			this.openset[i] = {
-				f: this.heuristic(i, this.goal),
+				h: this.heuristic(i, this.goal),
 				g: g,
+				get f(){ return this.h + this.g;},
 				from: from
 			};
 			this.fscore.push(i);
@@ -462,9 +510,6 @@
 			}
 			return item;
 		},
-		get length(){
-			return this.stack.length;
-		},
 		siftup: function (){
 			var index = this.stack.length - 1;
 			if (index < 1) return;
@@ -508,18 +553,9 @@
 		// a default compare function
 		defaultfn: function (a, b){
 			return a < b;
-		},
-		kill: function (){
-			this.stack.length = 0;
 		}
 	};
-//private functions	
-//--------------------------------------------------------------------------------------------------------------------
-	function isEmpty(o){
-		for (var v in o)
-			return true;
-		return false
-	}
+
 	//always new this app to main project
 	theProject.new(app);
 
