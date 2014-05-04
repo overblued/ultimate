@@ -10,107 +10,104 @@ window.onload = function () { (function (theProject) {
 /*	init	********************************************************************************************************/
 	//hidden message-.-
 	(function (){
-		var red = "red",
+		var red =	"red",
 			black = "black",
-			clr = black,
-			title = document.getElementsByTagName("h1")[0],
-			kitt = function(t){
-					this.styles({backgroundImage: "linear-gradient(90deg, transparent,"
-					 + clr + " " + (t*3+1)+ "%, transparent)"});
-			};
+			clr =	black;
+			
 		$('header').set({
-			onmouseover: function(){ clr = red;},
-			onmouseout: function (){ clr = black;}
+			onmouseover:	function (){ clr = red;},
+			onmouseout:		function (){ clr = black;}
 		});
 		$("bar").schedule(kitt, [-5,38,-4], 40, "permanent")
 				.styles({backgroundColor: "transparent"});
+				
+		function kitt(t){
+			this.styles({backgroundImage: "linear-gradient(90deg, transparent,"
+			 	+ clr + " " + (t*3+1)+ "%, transparent)"});
+		};
 	})();
 
 	//
-	$.events(theProject);
-	//a way to manage more apps
-	var apps = theProject.apps = {};
-	
-	var stage = theProject.stage = $('main');
-	/* * *
-	 * use this to introduce new app
-	 * * * * * * * * * * * * * * * * * * */
-	theProject.new = (function (){
-		//an internal track for the number of apps
-		var id = 0,
-			//wrap some default settings to an obj
-			common = {
-				name: 'App no.' + id,
-				description: 'No description',
-				hidden: false,
-				autostart: false
+	(function (){
+		//a way to manage more apps
+		var apps =		theProject.apps = {},
+			stage =		theProject.stage = $('#main'),
+			//share by all app
+			id = 0,
+			commonProperty = {
+					name:			'App no.' + id,
+					description:	'No description',
+					hidden:			false,
+					autostart:		false
+			},
+			//private methods
+			//
+			//lauch the app
+			initLaunch = function (app){
+				app.start();
+				//anime fadein
+				stage.schedule(
+					function (tick){ this.styles({opacity: tick/10}); }
+					,[1,10], 10, "interupt"
+				);
 			};
 		
-		return function (app){
+		$.events(theProject);
+		/* * *
+		 * use this to introduce new app
+		 * * * * * * * * * * * * * * * * * * */
+		theProject.new = function (app){
 			id += 1;
 			//common attr
 			$.events(app);
-			$.extend(app, common);
+			$.extend(app, commonProperty);
 			//
 			apps[app.name] = app;
 			console.log("%s has been loaded.", app.name);
-			//triguer an event
+			//tell everyone that a new app is added
 			this.notify('new', app);
-			
 			if (app.autostart)
 				this.launch(app);
 		};
-	})();
-	/* * *
-	 * launch app by name or the app itself
-	 * use theProject.current to track current running app
-	 * * * * * * * * * * * * * * * * * * */
-	theProject.launch = function (app){
-		var that = this;
-		if ( "string" === typeof app){ app = that.apps[app]; }
-		//make sure a start method is there
-		if (!app.start){
-			console.log("App %s has no method 'Start'.", app.name);
-			return false;
-		}
-		if (!that.current){
-			that.current = app;
-			initLaunch();
-		} else {
-			if (that.current === app){ return; }
-			else {
-				that.current.notify('close');
-				that.current = app;
-				//anime fade out
-				that.stage.schedule(
-					function (tick){
-						this.styles({opacity: tick/10});
-						if (tick === 0){
-							this.removeChilds();
-							initLaunch();
-						}
-					},
-					[9,0], 10, "interupt"
-				);
+		/* * *
+		 * launch app by name or the app itself
+		 * use theProject.current to track current running app
+		 * * * * * * * * * * * * * * * * * * */
+		theProject.launch = function (app){
+			if ( "string" === typeof app){ app = apps[app]; }
+			//make sure a start method is there
+			if (!app.start){
+				console.log("App %s has no method 'Start'.", app.name);
+				return false;
 			}
-		}
-		return true;
-		function initLaunch(){
-			app.start();
-			//anime fadein
-			that.stage.schedule(
-				function (tick){ this.styles({opacity: tick/10}); }
-				,[1,10], 10, "interupt"
+			if (!theProject.current){
+				theProject.current = app;
+				initLaunch(app);
+			}
+			if (theProject.current === app){ return; }
+			
+			//triger close event on prev app
+			theProject.current.notify('close');
+			theProject.current = app;
+			//anime fade out
+			stage.schedule(
+				function (tick){
+					this.styles({opacity: tick/10});
+					if (tick === 0){
+						this.removeChilds();
+						initLaunch(app);
+					}
+				}, [9,0], 10, "interupt"
 			);
-		}
-				
-	};
+			return true;
+		};
+		
+	}());
 	
-	$.load("css/intro.css", "js/intro.js")
 	
 	//load apps
+	$.load("css/intro.css", "js/intro.js")
+	
 	$.load("css/link.css", "js/link.js", "js/astar.js", "js/sudoku.js");
 	$.load("css/slideshow.css", "js/slideshow.js")
-
-	
 }(window.ultimate = window.ultimate || {})); };

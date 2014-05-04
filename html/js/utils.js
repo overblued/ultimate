@@ -25,13 +25,16 @@
 	* @param {String} name of element id
 	* * * * * * * * * * * * * * * * * * * * * * * * * * * */
 	function _$(id){
-		if (id instanceof _$)
-			return id;
-		if (typeof id === "string"){
+		if (!id){
+			this.element = document.getElementsByTagName('body')[0];
+		}else if (typeof id === "string"){
 			if (id[0] === '#' || id[0] === '.'){
 				this.element = document.querySelector(id)
 			}else{
 				this.element = fetch(id);
+			}
+			if (!this.element){
+				throw new Error('not match element is found by $');
 			}
 		}
 		else if (id.tagName)
@@ -138,7 +141,15 @@
 	* @param {String} name of element id
 	*
 	* * * * * * * * * * * * * * * * * * * * * * * * * * * * */
-	$ = function (id){ return new _$(id); };
+	$ = function (id){
+		if (this instanceof $ && id){
+			return new _$(document.createElement(id));
+		}
+		if (id instanceof _$){
+			return id;
+		}
+		return new _$(id);
+	};
 
 //dom object operation
 	/* * * * * * *

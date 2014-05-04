@@ -15,8 +15,11 @@
 		btn2 = $('#nav ul li:nth-child(2) a'),
 		//the app to be exported
 		app = {
-			name: "Menu",
-			description: "a showcase for all apps",
+			name:			"Menu",
+			description:	"a showcase for all apps",
+			hidden:			true,
+			autostart:		true,
+			
 			start: function (){
 				//because this app won't always be the first to load
 				// the 'new' event may not be invoke for previous loaded apps
@@ -24,7 +27,7 @@
 					newApp(app);
 				});
 				
-				theProject.attach('new', newApp);
+				theProject.attach('new', newApp2);
 				
 				menu.set({
 					onmouseout: function (e){
@@ -32,14 +35,14 @@
 						var to = e.toElement || e.relatedTarget;
 						while(to && to.parentElement !== null){
 							if ((to = to.parentElement) === this.element){return;}
-						}
-			
+						}console.log(theProject.current);
 						if (theProject.current !== app)
 							this.styles({marginTop: '-2em'});
 					}
 				});
 				//scroll effect
 				btn2.set({
+					innerHTML: app.name,
 					onmouseover: function (){
 						if (theProject.current !== app){
 							menu.styles({marginTop: 0});
@@ -55,16 +58,20 @@
 				(this.start = function(){
 					showcase.appendTo(theProject.stage);
 				})();
-			},
-			hidden: true,
-			autostart: true
+			}
 		};
 	
 	theProject.new(app);
 
 	//privileged methods
 	//----------------------------------------------------------------------
-	
+	var n = 1,f = 100;
+	function newApp2(app){
+		setTimeout(function (){
+			newApp(app)
+		}, n*f);
+		n++
+	}
 	function newApp(app){
 		var itemElem;
 		if (app.hidden){ return; }

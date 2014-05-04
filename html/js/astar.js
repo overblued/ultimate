@@ -8,15 +8,16 @@
 /*	init data ********************************************************************************************************/
 	//some parameters
 	var tuning = {
-			gridSize: 20,
-			gridColumns: 30,
-			gridRows: 15,
-			gridColor: "#666",
-			cellColor: "#888",
-			dotColor: "#8f00ff",
-			border: 2,
-			moveSpeed: 25,
-			wallFactor: 0.2,
+			gridSize:		10,
+			gridColumns:	64,
+			gridRows:		36,
+			gridColor:		"#ccc",
+			cellColor:		"#888",
+			dotColor:		"#8f00ff",
+			border:			2,
+			borderColor:	'#666',
+			moveSpeed:		25,
+			wallFactor:		0.2,
 			//composite attr
 			get height(){
 				return this.gridRows * this.gridSize ;
@@ -27,7 +28,7 @@
 		},
 		//base object
 		Base,
-		//inheret from Base
+		//inherit from Base
 		Dot,
 		Wall,
 		//the search alg
@@ -52,7 +53,7 @@
 					btns = $(document.createElement("ul")),
 					searching = false;
 				//prepare the canvas				
-				map.styles({border: tuning.border + "px solid " + tuning.gridColor})
+				map.styles({border: tuning.border + "px solid " + tuning.borderColor})
 				   .set({
 						 height: tuning.height
 						,width: tuning.width
