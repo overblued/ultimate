@@ -80,15 +80,15 @@ window.onload = function () { (function (theProject) {
 				console.log("App %s has no method 'Start'.", app.name);
 				return false;
 			}
-			if (!theProject.current){
-				theProject.current = app;
+			if (!this.current){
+				this.current = app;
 				initLaunch(app);
 			}
-			if (theProject.current === app){ return; }
+			if (this.current === app){ return; }
 			
 			//triger close event on prev app
-			theProject.current.notify('close');
-			theProject.current = app;
+			this.current.notify('close');
+			this.current = app;
 			//anime fade out
 			stage.schedule(
 				function (tick){
@@ -101,7 +101,11 @@ window.onload = function () { (function (theProject) {
 			);
 			return true;
 		};
-		
+		theProject.show = function(elem){
+			if (elem.appendTo){
+				elem.appendTo(this.stage)
+			}
+		}
 	}());
 	
 	
@@ -110,4 +114,5 @@ window.onload = function () { (function (theProject) {
 	
 	$.load("css/link.css", "js/link.js", "js/astar.js", "js/sudoku.js");
 	$.load("css/slideshow.css", "js/slideshow.js")
+	$.load("css/colors.css", "js/colors.js")
 }(window.ultimate = window.ultimate || {})); };

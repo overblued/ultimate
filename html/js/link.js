@@ -9,6 +9,8 @@
 	//public
 	var pairs = 1,	//percentage
 		numberOfColors = 19,
+		columns = 24,
+		rows = 12,
 		options = ["Restart","Hint","Rearrange","AutoPlay"],
 		grid,
 		view,
@@ -214,7 +216,7 @@
 			this.model = model;
 			this.previous = null;
 			//prepare
-			this.view.init(this.model.init(24,12));
+			this.view.init(this.model.init(columns,rows));
 			this.reset();
 			//attach controll event
 			this.view.table.set({onclick: this.onClick.bind(this)});

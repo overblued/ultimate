@@ -1,0 +1,6 @@
+.colors ul {padding:20px 40px;}
+.colors li{display:inline-block;margin:2px;border:1px solid #aaa;}
+.colors p{color:black;margin:0;padding:5px;text-shadow:0 0 1px #fff,0 0 1px #fff,0 0 1px #fff,0 0 1px #fff;}
+.colors p:first-child{font:.8em sans-serif;}
+.colors p:last-child{font:1.05em monospace;}
+.colors p[id]:before{content:attr(id);padding-right:60px;}
