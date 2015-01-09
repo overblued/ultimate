@@ -69,15 +69,7 @@ a{
 	margin:1.5em 0;
 	text-shadow: -1px -1px rgba(0, 0, 0, 0.1);
 }
-#nav {
-	margin-top:1.5em;
-	height:2em;
-	overflow:hidden;
-}
-#nav ul{ list-style:none;transition:all 0.2s; }
-#nav li{ height:2em; }
-#nav a { font-size:1.5em; margin:0 0.5em}
-#nav a:hover { color:black; }
+
 
 #main{
 	padding:2em;

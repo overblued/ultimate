@@ -1,3 +1,15 @@
+
+#nav>div.intro {
+	margin-top:1.5em;
+	height:2em;
+	overflow:hidden;
+}
+#nav>div.intro ul{ list-style:none;transition:all 0.2s; }
+#nav>div.intro li{ height:2em; }
+#nav>div.intro a { font-size:1.5em; margin:0 0.5em}
+#nav>div.intro a:hover { color:black; }
+
+
 .showcase{
 	min-height:20em;
 }

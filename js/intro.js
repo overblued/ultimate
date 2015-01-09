@@ -6,10 +6,10 @@
 
 ( function (theProject) {
 
+		$('#nav').set({innerHTML: '<div class="intro"><ul><li><a>{{back}}</a></li><li><a>{{current}}</a></li></ul></div>'});
 		//private var
 	var showcase = $(document.createElement('ul')).set({ className: 'showcase' }),
 		template = '<h4>{{name}}</h4><p>{{des}}</p>',
-		
 		menu = $('#nav ul'),
 		btn1 = $('#nav ul li:nth-child(1) a'),
 		btn2 = $('#nav ul li:nth-child(2) a'),
