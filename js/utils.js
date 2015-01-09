@@ -21,7 +21,7 @@
 		fetch = document.getElementById.bind(document);
 	/* * * * * * *
 	* a jquery object mockup
-	* main acess point,i use the sign $,same as the jquery,because i have no intention to use it rather to make my own.
+	* main access point,i use the sign $,same as the jquery,because i have no intention to use it rather to make my own.
 	* @param {String} name of element id
 	* * * * * * * * * * * * * * * * * * * * * * * * * * * */
 	function _$(id){
@@ -83,7 +83,7 @@
 			$(parent).element.appendChild(this.element);
 			return this;
 		},
-		removeChilds: function(){
+		removeChildren: function(){
 			while(this.element.firstChild)
 				this.element.removeChild(this.element.firstChild);
 			return this;
@@ -102,7 +102,7 @@
 				len = sequence.length,
 				f = interval || 1000;
 			if (that.scheduleId){
-				if (option === "interupt" || !callBack){
+				if (option === "interrupt" || !callBack){
 					clearTimeout(that.scheduleId);
 					that.scheduleId = 0;
 				}else{
@@ -137,8 +137,8 @@
 		}
 	};
 	/**
-	* main acess point,i use the sign $,same as the jquery,because i have no intention to use it rather to make my own.
-	* @param {String} name of element id
+	* main access point,i use the sign $,same as the jquery,because i have no intention to use it rather to make my own.
+	* @param {String} id name of element id
 	*
 	* * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 	$ = function (id){
@@ -221,7 +221,7 @@
 				len;
 			if (callBacks) {
 				len = callBacks.length;
-				//put the args in to an array if it is not one,becaus the Object.prototype.apply method only accpet an array. 
+				//put the args in to an array if it is not one,because the Object.prototype.apply method only accept an array.
 				if (!(args instanceof Array) && args) {
 					(tmp = []).push(args);
 				}
@@ -251,11 +251,11 @@
 				// if the callBacks stack is not empty
 			} else if (callBacks) {
 				len = callBacks.length;
-				//if callBack is not undefine or more than 1 callback is attached to the event
+				//if callBack is not undefined or more than 1 callback is attached to the event
 				if (!callBack || len < 2) {
 					for (i = 0; i < len; i++) {
 						if (callBack === callBacks[i]) {
-							//found and ereased
+							//found and erased
 							callBacks[i] = callBacks[len - 1];
 							callBacks.length = len - 1;
 						}
@@ -270,11 +270,10 @@
 
 	/* * * * * * *
 	* load an external js/css file
-	* @param {String} takes abitiry numbers of strings
+	* @param {String} takes any numbers of strings
 	* * * * * * * * * * * * * * * * * * * * * * * * * * * */
 	$.load = function(){
-//		var files = slice.call(arguments);
-		var files = arguments;
+		var file,files = slice.call(arguments);
 		forEach(files, function(src){
 			if (/\.js$/.test(src)){
 				file=document.createElement('script');
@@ -310,10 +309,10 @@
 			
 		},
 		//for the dom object
-		addElement: function (id, evts) {
+		addElement: function (id, events) {
 			var elem = this.data[id] = fetch(id);
 			events(elem);
-			forEach(evts, function (action, evt) {	elem.attach(evt, action); });
+			forEach(events, function (action, evt) {	elem.attach(evt, action); });
 		}
 	};
 	/* * * * * * *
@@ -331,7 +330,7 @@
 		set: function(key, value){
 			this.data[key] = value;
 			this.notify("change", key, value);
-		},
+		}
 	};
 	/* * * * * * *
 	* Controller
@@ -445,7 +444,7 @@
 					}, 1000 / 60);
 				};
 	}());
-	//attach thie $ sign to global window
+	//attach the $ to global window
 	window.$ = $;
 
-}(this));
+})(this);

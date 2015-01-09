@@ -94,7 +94,7 @@ window.onload = function () { (function (theProject) {
 				function (tick){
 					this.styles({opacity: tick/10});
 					if (tick === 0){
-						this.removeChilds();
+						this.removeChildren();
 						initLaunch(app);
 					}
 				}, [9,0], 10, "interupt"

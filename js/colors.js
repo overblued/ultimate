@@ -18,7 +18,7 @@
 				.replace('{{hex}}','#'+colors[p].toUpperCase());
 	};
 	ul += '</ul>';
-	list.set({innerHTML: ul, className:'colors'})
+	list.set({innerHTML: ul, className:'colors'});
 	
 	theProject.new({
 		name:			"CSS Colors",

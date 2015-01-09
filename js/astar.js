@@ -1,5 +1,5 @@
 /* * * * * * * * * *
- *my realization of astar search with binary heap
+ *my realization of a star search with binary heap
  *
  *with canvas
  *
@@ -121,7 +121,8 @@
 			}
 		};
 		
-	
+	//an abstract base object
+	//
 	Base = function (p){
 		if (p){	this.add(p)	}
 		else {
@@ -150,8 +151,9 @@
 			if (!this.onstage){
 				var tmp = this.p;
 				this.p = p;
-				if (painter.draw(this));
+				if (painter.draw(this)){
 					this.onstage = true;
+				}
 				return this;
 			}else{
 				return false;
@@ -163,7 +165,7 @@
 		Base.call(this,p)
 	};
 	Dot.prototype = Object.create(Base.prototype, {
-		name: {value: 'dot', enumerable: true,}
+		name: {value: 'dot', enumerable: true}
 	});
 	Dot.prototype.move = function (p){
 		if (this.onstage){
@@ -173,7 +175,7 @@
 	};
 	Dot.prototype.blink = function (p){
 		var tmp = this.p;
-		this.p = p
+		this.p = p;
 		if (this.onstage && painter.draw(this, tmp)){
 			return this;
 		}else{
@@ -186,7 +188,7 @@
 		Base.call(this,p)
 	};
 	Wall.prototype = Object.create(Base.prototype, {
-		name: {value: 'wall', enumerable: true,}
+		name: {value: 'wall', enumerable: true}
 	});
 	/* * *
 	 * Grid
@@ -231,7 +233,7 @@
 		},
 		isOccupied: function (p){
 			return Boolean(this.get(p));
-		},
+		}
 	};
 	
 	painter = {
@@ -240,7 +242,7 @@
 			ctx.translate(this.translate,this.translate);
 			ctx.linecap = "square";
 			this.ctx = ctx;
-			this.size = tuning.gridSize;;
+			this.size = tuning.gridSize;
 			this.data = data;
 			this.drawGrid();
 		},
@@ -393,7 +395,7 @@
 				neighbors.forEach(function (v, k){
 					//if it's a wall or out of range or in closeset
 					if (v === null || that.map.cells[v]){
-						return ;
+						return;
 					} else {
 						gTmp = that.closedset[current].g + (k > 3 ? diagnal : adjacent);
 						if (that.closedset[v] && (that.closedset[v].f <= gTmp + that.closedset[v].h)){
@@ -487,7 +489,7 @@
 	BinaryHeap = function( fn ){
 		this.fn = fn || this.defaultfn;
 		this.stack = [];
-	}
+	};
 
 	BinaryHeap.prototype = {
 		push: function ( obj ){

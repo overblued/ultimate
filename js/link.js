@@ -140,7 +140,7 @@
 		show: function(){
 			init = true;
 //			if(this.main){
-				//this.main.removeChilds();
+				//this.main.removeChildren();
 //				this.main.set({innerHTML: "<noscript>" + noscriptMsg + "</noscript>"});
 				this.options.appendTo(stage);
 				this.table.appendTo(stage);
@@ -150,7 +150,7 @@
 			this.data[index].set({innerHTML: "<div class='bricks clr" + clr + "'></div>"});
 		},
 		removeBrick: function(index){
-			this.data[index].removeChilds();
+			this.data[index].removeChildren();
 		},
 		refresh: function(){
 			var that = this;
@@ -190,7 +190,7 @@
 								}
 								//finish fading, remove itself
 								if (t === 22){
-									this.removeChilds();
+									this.removeChildren();
 									return;
 								}
 								//make fading the next one, with a delay of 1 iteration
