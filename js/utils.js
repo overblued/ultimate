@@ -151,21 +151,6 @@
 		return new _$(id);
 	};
 
-//dom object operation
-	/* * * * * * *
-	* set multiple elements with same multiple css style
-	* @param {Array} a list of the element id
-	* @param {String} css style property
-	* @param {String} attribute
-	* * * * * * * * * * * * * * * * * * * * * * * * * * * */
-	$.setStyles = function (ids){
-		var cssStyles = arguments[1];
-		forEach(ids, function(id){ $(id).styles(cssStyles); });
-	};
-	$.setAttrs = function (ids){
-		var attrs = arguments[1];
-		forEach(ids, function(id){ $(id).set(attrs); });
-	};
 
 //functional tool
 	/* * * * * * *
@@ -445,6 +430,6 @@
 				};
 	}());
 	//attach the $ to global window
-	window.$ = $;
+	window.$$ = $;
 
 })(this);

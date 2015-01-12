@@ -6,13 +6,13 @@
 
 ( function (theProject) {
 
-		$('#nav').set({innerHTML: '<div class="intro"><ul><li><a>{{back}}</a></li><li><a>{{current}}</a></li></ul></div>'});
+		$$('#nav').set({innerHTML: '<div class="intro"><ul><li><a>{{back}}</a></li><li><a>{{current}}</a></li></ul></div>'});
 		//private var
-	var showcase = $(document.createElement('ul')).set({ className: 'showcase' }),
+	var showcase = $$(document.createElement('ul')).set({ className: 'showcase' }),
 		template = '<h4>{{name}}</h4><p>{{des}}</p>',
-		menu = $('#nav ul'),
-		btn1 = $('#nav ul li:nth-child(1) a'),
-		btn2 = $('#nav ul li:nth-child(2) a'),
+		menu = $$('#nav ul'),
+		btn1 = $$('#nav ul li:nth-child(1) a'),
+		btn2 = $$('#nav ul li:nth-child(2) a'),
 		//the app to be exported
 		app = {
 			name:			"Menu",
@@ -23,7 +23,7 @@
 			start: function (){
 				//because this app won't always be the first to load
 				// the 'new' event may not be invoke for previous loaded apps
-				$.forEach(theProject.apps, function (app){
+				$$.forEach(theProject.apps, function (app){
 					newApp(app);
 				});
 				

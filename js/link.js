@@ -49,7 +49,7 @@
 			return index;
 		},
 		toCoord: function(n){
-			return new $.Point(n % this.columns, n / this.columns | 0);
+			return new $$.Point(n % this.columns, n / this.columns | 0);
 		},
 		get: function(x,y){
 			return this.cells[this.toIndex(x,y)];
@@ -60,7 +60,7 @@
 		set: function(data, x, y){
 			var i = this.toIndex(x,y);
 			if (this.horde[this.get(i)]){
-				this.horde[this.get(i)] = $.filter(this.horde[this.get(i)], function(index){return index !== i;});
+				this.horde[this.get(i)] = $$.filter(this.horde[this.get(i)], function(index){return index !== i;});
 			}
 			if (data && data !== "undefined"){
 				if (!this.horde[data])
@@ -79,7 +79,7 @@
 		
 		makeHorde: function(){
 			var horde = {};
-			$.forEach(this.cells, function(data, i){
+			$$.forEach(this.cells, function(data, i){
 				if (!horde[data]){
 					horde[data] = [];
 				}
@@ -92,7 +92,7 @@
 				temp,
 				rnd;
 			while(--len){
-				rnd = $.random(len);
+				rnd = $$.random(len);
 				temp = this.cells[len];
 				this.set(this.cells[rnd], len);
 				this.set(temp, rnd);
@@ -106,11 +106,11 @@
 		init: function(model){
 			this.model = model;
 			this.data = this.data || [];
-			$.events(this);
+			$$.events(this);
 			
 	//prepare the grid;
 			if (!this.table){
-				var tbl = this.table = $(document.createElement("table"));
+				var tbl = this.table = $$(document.createElement("table"));
 				tbl.set({id: "link"});
 
 				var i, j,
@@ -120,17 +120,17 @@
 					var tr = document.createElement("tr");
 					for (j = 0; j < c; j++){
 						var td = document.createElement("td");
-						this.data.push($(td));
+						this.data.push($$(td));
 						tr.appendChild(td);
 					}
 					tbl.invoke("appendChild", tr);
 				}
 			}
 			if (!this.options){
-				this.options = $(document.createElement("ol"));
+				this.options = $$(document.createElement("ol"));
 				var ops = this.options.set({className: "option"});
-				$.forEach(options,function(label,i){
-					$(document.createElement("li")).appendTo(ops)
+				$$.forEach(options,function(label,i){
+					$$(document.createElement("li")).appendTo(ops)
 													 .set({innerHTML:label, className: "clr"+(i+1)});
 				});
 			}
@@ -154,7 +154,7 @@
 		},
 		refresh: function(){
 			var that = this;
-			$.forEach(that.model.cells,function(dat,i){
+			$$.forEach(that.model.cells,function(dat,i){
 				if (that.model.isValid(i)){
 					that.addBrick(i, dat);
 				}else{
@@ -231,7 +231,7 @@
 				clr;
 		
 			while (i--){
-				clr = $.random(numberOfColors) + 1;
+				clr = $$.random(numberOfColors) + 1;
 				this.model.set(clr,i);
 				this.model.set(clr,i+this.numOfBricks);
 			}
@@ -331,7 +331,7 @@
 		},
 		rearrange:function(){
 			var i, j=0, temp;
-			temp = $.shuffle($.filter(this.model.cells, function(dat){return dat>0;}));
+			temp = $$.shuffle($$.filter(this.model.cells, function(dat){return dat>0;}));
 			for(i=0;i<temp.length;i++){
 				while(!this.model.isValid(j)){
 					j++;
@@ -354,7 +354,7 @@
 			}
 		},
 		getCoord: function(elem){
-			return $.Point(elem.parentElement.cellIndex, elem.parentElement.parentElement.sectionRowIndex);
+			return $$.Point(elem.parentElement.cellIndex, elem.parentElement.parentElement.sectionRowIndex);
 		},
 		found: function(path){
 			var l = path.length-1,c = this.model.get(path[0]);
@@ -404,11 +404,11 @@
 			
 			function checkCaseOne(p1x, p1y, p2x, p2y){
 				if (checkCaseZero(p1x, p1y, p1x, p2y, 0) && checkCaseZero(p2x, p2y, p1x, p2y, 0)){
-					path.push($.Point(p1x, p2y));
+					path.push($$.Point(p1x, p2y));
 					return true;
 				}
 				if (checkCaseZero(p1x, p1y, p2x, p1y, 0) && checkCaseZero(p2x, p2y, p2x, p1y, 0)){
-					path.push($.Point(p2x, p1y));
+					path.push($$.Point(p2x, p1y));
 					return true;
 				}
 				return false;
@@ -438,7 +438,7 @@
 						if (map.isValid(x, y)){
 							break;
 						}else if (checkCaseOne(x, y, p2x, p2y)){
-							path.push($.Point(x, y));
+							path.push($$.Point(x, y));
 							return true;
 						}
 						step += dir[0] + dir[1];

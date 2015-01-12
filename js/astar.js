@@ -49,8 +49,8 @@
 				var dot = new Dot(),
 					grid = new Grid(tuning.gridColumns,tuning.gridRows, tuning.gridSize),
 					astar = new Astar(grid),
-					map = $(document.createElement("canvas")),
-					btns = $(document.createElement("ul")),
+					map = $$(document.createElement("canvas")),
+					btns = $$(document.createElement("ul")),
 					searching = false;
 				//prepare the canvas				
 				map.styles({border: tuning.border + "px solid " + tuning.borderColor})
@@ -97,7 +97,7 @@
 				//paint
 				painter.init(map.invoke("getContext",'2d'), grid);
 				//make some wall in grid
-				$.forEach(grid.cells, function (v,k,a){
+				$$.forEach(grid.cells, function (v,k,a){
 					if (k === 0){
 						a[k] = dot.add(grid.point(0));
 					}else if (Math.random() < tuning.wallFactor){

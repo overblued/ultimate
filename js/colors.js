@@ -10,7 +10,7 @@
 					<p>{{name}}</p>\
 					<p id="{{index}}">{{hex}}</p>\
 				</li>';
-	var list = $(document.createElement("div"));
+	var list = $$(document.createElement("div"));
 	var ul = '<ul>', p, i = 1;
 	for(p in colors){
 		ul += tmp.replace(/{{name}}/g,p)

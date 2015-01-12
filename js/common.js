@@ -14,11 +14,11 @@ window.onload = function () { (function (theProject) {
 			black = "black",
 			clr =	black;
 			
-		$('header').set({
+		$$('header').set({
 			onmouseover:	function (){ clr = red;},
 			onmouseout:		function (){ clr = black;}
 		});
-		$("bar").schedule(kitt, [-5,38,-4], 40, "permanent")
+		$$("bar").schedule(kitt, [-5,38,-4], 40, "permanent")
 				.styles({backgroundColor: "transparent"});
 				
 		function kitt(t){
@@ -31,7 +31,7 @@ window.onload = function () { (function (theProject) {
 	(function (){
 		//a way to manage more apps
 		var apps =		theProject.apps = {},
-			stage =		theProject.stage = $('#main'),
+			stage =		theProject.stage = $$('#main'),
 			//share by all app
 			id = 0,
 			commonProperty = {
@@ -48,19 +48,19 @@ window.onload = function () { (function (theProject) {
 				//anime fadein
 				stage.schedule(
 					function (tick){ this.styles({opacity: tick/10}); }
-					,[1,10], 10, "interupt"
+					,[1,10], 10, "interrupt"
 				);
 			};
 		
-		$.events(theProject);
+		$$.events(theProject);
 		/* * *
 		 * use this to introduce new app
 		 * * * * * * * * * * * * * * * * * * */
 		theProject.new = function (app){
 			id += 1;
 			//common attr
-			$.events(app);
-			$.extend(app, commonProperty);
+			$$.events(app);
+			$$.extend(app, commonProperty);
 			//
 			apps[app.name] = app;
 			console.log("%s has been loaded.", app.name);
@@ -86,7 +86,7 @@ window.onload = function () { (function (theProject) {
 			}
 			if (this.current === app){ return; }
 			
-			//triger close event on prev app
+			//trigger close event on prev app
 			this.current.notify('close');
 			this.current = app;
 			//anime fade out
@@ -97,7 +97,7 @@ window.onload = function () { (function (theProject) {
 						this.removeChildren();
 						initLaunch(app);
 					}
-				}, [9,0], 10, "interupt"
+				}, [9,0], 10, "interrupt"
 			);
 			return true;
 		};
@@ -110,9 +110,9 @@ window.onload = function () { (function (theProject) {
 	
 	
 	//load apps
-	$.load("css/intro.css", "js/intro.js")
+	$$.load("css/intro.css", "js/intro.js")
 	
-	$.load("css/link.css", "js/link.js", "js/astar.js", "js/sudoku.js");
-	$.load("css/slideshow.css", "js/slideshow.js")
-	$.load("css/colors.css", "js/colors.js")
+	$$.load("css/link.css", "js/link.js", "js/astar.js", "js/sudoku.js");
+	$$.load("css/slideshow.css", "js/slideshow.js")
+	$$.load("css/colors.css", "js/colors.js")
 }(window.ultimate = window.ultimate || {})); };
