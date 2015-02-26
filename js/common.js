@@ -22,9 +22,8 @@ window.onload = function () { (function (theProject) {
 				.styles({backgroundColor: "transparent"});
 				
 		function kitt(t){
-			this.styles({backgroundImage: "linear-gradient(90deg, transparent,"
-			 	+ clr + " " + (t*3+1)+ "%, transparent)"});
-		};
+			this.styles({backgroundImage: "linear-gradient(90deg, transparent,"	+ clr + " " + (t*3+1)+ "%, transparent)"});
+		}
 	})();
 
 	//
@@ -103,16 +102,16 @@ window.onload = function () { (function (theProject) {
 		};
 		theProject.show = function(elem){
 			if (elem.appendTo){
-				elem.appendTo(this.stage)
+				elem.appendTo(this.stage);
 			}
-		}
-	}());
+		};
+	})();
 	
 	
 	//load apps
-	$$.load("css/intro.css", "js/intro.js")
+	$$.load("css/intro.css", "js/intro.js");
 	
 	$$.load("css/link.css", "js/link.js", "js/astar.js", "js/sudoku.js");
-	$$.load("css/slideshow.css", "js/slideshow.js")
-	$$.load("css/colors.css", "js/colors.js")
+	$$.load("css/slideshow.css", "js/slideshow.js");
+	$$.load("css/colors.css", "js/colors.js");
 }(window.ultimate = window.ultimate || {})); };

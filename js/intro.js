@@ -55,9 +55,10 @@
 					onclick: function (){ switchApp(app.name); }
 				});
 				//clear main
-				(this.start = function(){
+				this.start = function(){
 					showcase.appendTo(theProject.stage);
-				})();
+				};
+				this.start();
 			}
 		};
 	
@@ -68,9 +69,9 @@
 	var n = 1,f = 100;
 	function newApp2(app){
 		setTimeout(function (){
-			newApp(app)
+			newApp(app);
 		}, n*f);
-		n++
+		n++;
 	}
 	function newApp(app){
 		var itemElem;
@@ -79,7 +80,7 @@
 			itemElem = document.createElement('li');
 			itemElem.innerHTML = template.replace('{{name}}', app.name)
 										 .replace('{{des}}', app.description);
-			itemElem.onclick = function (){ switchApp(app.name) };
+			itemElem.onclick = function (){ switchApp(app.name); };
 			showcase.invoke('appendChild', itemElem);
 		}
 	}

@@ -1,3 +1,5 @@
 #exclude netbean config files
+node_modules/
 nbproject/
 .idea/
+*.log

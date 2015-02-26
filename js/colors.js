@@ -16,7 +16,7 @@
 		ul += tmp.replace(/{{name}}/g,p)
 				.replace('{{index}}',('00'+(i++)).slice(-3))
 				.replace('{{hex}}','#'+colors[p].toUpperCase());
-	};
+	}
 	ul += '</ul>';
 	list.set({innerHTML: ul, className:'colors'});
 	

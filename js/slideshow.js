@@ -27,7 +27,7 @@
 						<label for="slidecontrol4"></label>\
 						<label for="slidecontrol5"></label>\
 					</div>\
-				</div>'
+				</div>';
 	theProject.new({
 		name: "Slideshow",
 		description: "Pure CSS slideshow",

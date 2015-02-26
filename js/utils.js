@@ -29,7 +29,7 @@
 			this.element = document.getElementsByTagName('body')[0];
 		}else if (typeof id === "string"){
 			if (id[0] === '#' || id[0] === '.'){
-				this.element = document.querySelector(id)
+				this.element = document.querySelector(id);
 			}else{
 				this.element = fetch(id);
 			}

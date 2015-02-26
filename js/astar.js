@@ -58,9 +58,11 @@
 						 height: tuning.height
 						,width: tuning.width
 						,onclick: function clickHandler(e){
-							if (e.offsetX >= tuning.width || e.offsetY < 1 
-								|| e.offsetY >= tuning.height || e.offsetY < 1){
-								return
+							if (e.offsetX >= tuning.width ||
+											e.offsetY < 1 ||
+											e.offsetY >= tuning.height ||
+											 e.offsetY < 1){
+								return;
 							}
 							if (e.target.tagName === 'CANVAS'){
 								var gridX = ~~(e.offsetX / tuning.gridSize),
@@ -114,17 +116,18 @@
 						verticalAlign: 'top'
 					});
 				//rewrite the start function
-				(this.start = function(){
+				this.start = function(){
 					map.appendTo(theProject.stage);
 					//btns.appendTo(theProject.stage);
-				})();
+				};
+				this.start();
 			}
 		};
 		
 	//an abstract base object
 	//
 	Base = function (p){
-		if (p){	this.add(p)	}
+		if (p){	this.add(p); }
 		else {
 			this.x = undefined;
 			this.y = undefined;
@@ -162,7 +165,7 @@
 	};
 	//inherit from thing
 	Dot = function (p){
-		Base.call(this,p)
+		Base.call(this,p);
 	};
 	Dot.prototype = Object.create(Base.prototype, {
 		name: {value: 'dot', enumerable: true}
@@ -185,7 +188,7 @@
 	};
 	
 	Wall = function (p){
-		Base.call(this,p)
+		Base.call(this,p);
 	};
 	Wall.prototype = Object.create(Base.prototype, {
 		name: {value: 'wall', enumerable: true}
@@ -307,7 +310,7 @@
 				return true;
 			}
 			if (!this.paintable(obj.p)){
-				return false
+				return false;
 			}
 			if (from){
 				this.data.cells[this.data.index(from)] = null;
@@ -326,7 +329,7 @@
 			this.ctx.clearRect(p.x * s + 0.5, p.y * s + 0.5, s - 1, s - 1);
 		},
 		paintable: function (p){
-			return !this.data.isOccupied(p)
+			return !this.data.isOccupied(p);
 		}
 	};
 /* * *
@@ -392,27 +395,28 @@
 				
 				neighbors = that.getNeighbors(current);
 				
-				neighbors.forEach(function (v, k){
-					//if it's a wall or out of range or in closeset
-					if (v === null || that.map.cells[v]){
-						return;
-					} else {
-						gTmp = that.closedset[current].g + (k > 3 ? diagnal : adjacent);
-						if (that.closedset[v] && (that.closedset[v].f <= gTmp + that.closedset[v].h)){
-							return;
-						}
-						if (!that.openset[v]){
-							that.addToOpenSet(v, current, gTmp);
-						}
-						//it's in openset
-						if (that.openset[v].f > gTmp + that.openset[v].h){
-							//make current parent node of this neignbor
-							that.openset[v].from = current;
-							that.openset[v].g = gTmp;
-						}
-					}
-				});
+				neighbors.forEach(_forEveryNeighbor);
 			}
+			function _forEveryNeighbor(v, k){
+				//if it's a wall or out of range or in closeset
+				if (v === null || that.map.cells[v]){
+					return;
+				} else {
+					gTmp = that.closedset[current].g + (k > 3 ? diagnal : adjacent);
+					if (that.closedset[v] && (that.closedset[v].f <= gTmp + that.closedset[v].h)){
+						return;
+					}
+					if (!that.openset[v]){
+						that.addToOpenSet(v, current, gTmp);
+					}
+					//it's in openset
+					if (that.openset[v].f > gTmp + that.openset[v].h){
+						//make current parent node of this neignbor
+						that.openset[v].from = current;
+						that.openset[v].g = gTmp;
+					}
+				}
+			}	
 			return false;
 		},
 		prep: function (start, goal){
@@ -527,10 +531,10 @@
 				child1, child2,
 				candidate;
 			while (true){
-				childIndex1 = (index << 1) + 1,
-				childIndex2 = childIndex1 + 1,
-				child1 = this.stack[childIndex1],
-				child2 = this.stack[childIndex2],
+				childIndex1 = (index << 1) + 1;
+				childIndex2 = childIndex1 + 1;
+				child1 = this.stack[childIndex1];
+				child2 = this.stack[childIndex2];
 				candidate = 0;
 				//find the target to switch in one of its children;
 				if (child2 && this.fn(child2, child1) && this.fn(child2, this.stack[index])){

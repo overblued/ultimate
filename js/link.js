@@ -398,7 +398,7 @@
 						return false;
 					}
 					steps += dirX + dirY;
-				};
+				}
 				return true;
 			}
 			
