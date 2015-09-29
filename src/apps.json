@@ -1,0 +1,48 @@
+/**
+ * Created by overblued on 09/29/2015.
+ */
+
+
+/*
+   an app object template
+  {
+    "name":         "App Name",
+    "description":  "Description Empty",
+    "hidden":       false, //optional
+    "autoStart":    false, //optional
+  }
+*/
+[
+  {
+    "name":			"Menu",
+    "description":  "A show case for all apps",
+    "hidden":	    true,
+    "autoStart":	true,
+		"res": ["intro.js", "intro.css"]
+  },
+	{
+		"name": "A* Search",
+		"description": "A star search with binary heap",
+		"res": ["astar.js", "astar.css"]
+	},
+	{
+		"name": "CSS Colors",
+		"description": "all valid css colors",
+		"res": ["colors.js", "colors.css"]
+	},
+	{
+		"name": "Link",
+		"description": "Simple link game using table grid",
+		"res": ["link.js", "link.css"]
+	},
+	{
+		"name": "Slideshow",
+		"description": "Pure CSS slideshow",
+		"res": ["astar.js", "astar.css"]
+	},
+	{
+		"name": "Sudoku",
+		"description": "sudoku",
+		"res": ["sudoku.js"]
+	}
+]
