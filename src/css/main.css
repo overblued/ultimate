@@ -1,0 +1,102 @@
+/* main css -------------------------------------------------------------------------------------------------*/
+/* object: balance clean simple*/
+
+/* colors used: outline l	#e6e6fa,
+				outline h	#afafaf,
+				text-light	#606060,
+				text-main	#303030,
+				background	white,
+				highlight	black,
+				shadow		#afafaf		*/
+
+/* 3 types of font-family:
+	monospace:	Consolas, monospace;
+	serif:		Georgia, serif;
+	sans-serif:	Arial, sans-serif;		*/
+
+html{ height:100%; background-color: white; user-select:none;-webkit-user-select:none;}
+body { margin:0 auto; height:100%; width: 60em;
+		color: #606060;
+		background-color: white;
+}
+/*typography***************************************************************************************/
+
+hr,h1,h2,h3,h4,p,ul,li,div,tr,td,table{ margin: 0; padding:0;}
+ul{list-style: none;}
+hr{border: none; height:1px; background-color:#afafaf;}
+h1{font: bold small-caps 2em Constantia,serif; }
+h2{font-size: 1.75em;}h3{font-size: 1.5em;}h4{font-size: 1.25em;}
+h2,h3,h4{font-weight: normal; font-family: georgia,serif;}
+
+p{
+	font:1em arial,sans-serif;
+}
+a{
+	font: 1em Verdana,sans-serif;
+	text-decoration: none;
+	cursor: pointer;
+}
+
+/*a simple 12 columns grid----------------------------------*/
+
+.box{
+	text-align: center;
+	display: inline-block;
+	vertical-align: top;
+	-moz-box-sizing:border-box;
+	box-sizing:border-box;
+}
+
+/*center, top and bottom are to give the box specific align property, default are center and top*/
+.left {text-align: left;}
+.right {text-align: right;}
+.middle {vertical-align: middle;}
+.bottom {vertical-align: bottom;}
+
+/*box width range: form 1 to 12*/
+.c1 {width: 5em;}.c2 {width: 10em;}.c3 {width: 15em;}.c4 {width: 20em;}.c5 {width: 25em;}.c6 {width: 30em;}
+.c7 {width: 35em;}.c8 {width: 40em;}.c9 {width: 45em;}.c10 {width: 50em;}.c11 {width: 55em;}.c12 {width: 60em;}
+
+
+/*sections----------------------------------------------*/
+#header {
+	position:relative;
+	box-shadow: 0 0 0.5em #afafaf;
+	border-radius:0 0 0.5em 0.5em;
+}
+#title{
+	display: inline-block;
+	margin:1.5em 0;
+	text-shadow: -1px -1px rgba(0, 0, 0, 0.1);
+}
+
+
+#main{
+	padding:2em;
+	min-height:30em;
+}
+#footer{
+	min-height:2em;
+	box-shadow: 0 0 0.5em #afafaf;
+	border-radius:0.5em 0.5em 0 0;
+}
+
+
+/*******-------------------------------------------------------------------------------------------------*/
+
+.tritri{
+	margin:0 0.5em 0 0.5em;
+	display: inline-block;
+	background-color:gold;
+	transition:all 2s ease 2s;
+}
+.tritri:hover{
+	background-color:initial;
+}
+.tri{
+	float:left;
+	width:0;
+	border-bottom:6.9px solid gold;
+	border-left:4px solid transparent;
+	border-right:4px solid transparent;
+}
